@@ -443,7 +443,7 @@ window.TIMESUP_WORDS["디코드"] = [
   "디코드",
   "손정민",
   "주먹밥",
-  "래킹볼",
+  "레킹볼",
 ];
 
 window.TIMESUP_WORDS["추가 단어"] = [
