@@ -1,5 +1,5 @@
 window.TIMESUP_WORDS = window.TIMESUP_WORDS || {};
-window.TIMESUP_WORDS["🧑 인물"] = [
+window.TIMESUP_WORDS["인물"] = [
   "유재석",
   "강호동",
   "신동엽",
@@ -195,7 +195,7 @@ window.TIMESUP_WORDS["🧑 인물"] = [
   "현아",
 ];
 
-window.TIMESUP_WORDS["🏠 사물"] = [
+window.TIMESUP_WORDS["사물"] = [
   "휴대폰", "노트북", "태블릿", "키보드", "마우스",
   "모니터", "프린터", "스피커", "헤드폰", "이어폰", "카메라",
   "리모컨", "텔레비전", "냉장고", "세탁기",
@@ -234,7 +234,7 @@ window.TIMESUP_WORDS["🏠 사물"] = [
   "축구","농구", "수영", "아이스 아메리카노"
 ];
 
-window.TIMESUP_WORDS["📺 방송명"] = [
+window.TIMESUP_WORDS["방송명"] = [
   "무한도전",
   "런닝맨",
   "1박 2일",
@@ -245,7 +245,7 @@ window.TIMESUP_WORDS["📺 방송명"] = [
   "슈퍼맨이 돌아왔다"
   ];
 
-window.TIMESUP_WORDS[🎬 영화"] = [
+window.TIMESUP_WORDS["영화"] = [
   "기생충",
   "극한직업",
   "베테랑",
@@ -265,7 +265,7 @@ window.TIMESUP_WORDS[🎬 영화"] = [
   "타이타닉",
   ];
 
-window.TIMESUP_WORDS["🎵 노래 제목"] = [
+window.TIMESUP_WORDS["노래 제목"] = [
   // 1세대 아이돌
   "캔디", // H.O.T.
   "커플", // 젝스키스
@@ -299,7 +299,7 @@ window.TIMESUP_WORDS["🎵 노래 제목"] = [
   "벚꽃 엔딩", // 장범준
   ];
 
-window.TIMESUP_WORDS["🐰 만화•애니"] = [
+window.TIMESUP_WORDS["만화"] = [
 
   // 🇯🇵 일본 애니메이션
   "원피스",
