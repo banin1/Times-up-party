@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIME'S UP PARTY 🎉</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#fff8f2;color:#33284e;
+  font-family:Arial,"Apple SD Gothic Neo",sans-serif;
+}
+main{max-width:520px;margin:auto;padding:22px 18px 40px}
+header{text-align:center;font-weight:900;color:#7955ef;font-size:22px}
+.hero{text-align:center;padding:25px 0}
+.hero .emoji{font-size:65px}
+h1{font-size:37px;margin:10px 0}
+h1 span{color:#7955ef}
+p{color:#8c829d;line-height:1.6}
+.box{
+  background:white;border:2px solid #eee6fa;
+  border-radius:24px;padding:22px;margin:15px 0;
+  box-shadow:0 5px 0 #eee6fa;
+}
+label{display:block;font-weight:bold;margin:17px 0 9px}
+select{
+  width:100%;padding:13px;border-radius:12px;
+  border:2px solid #eee6fa;background:#fff;color:#33284e;
+}
+button{border:0;cursor:pointer;font-size:16px;font-weight:bold}
+.primary{
+  width:100%;padding:17px;background:#7955ef;color:white;
+  border-radius:15px;margin-top:15px;font-size:19px;
+}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.opt{
+  background:#faf7ff;border:2px solid #eee6fa;
+  padding:13px 5px;border-radius:12px;color:#51456c;
+}
+.opt.on{background:#eee7ff;border-color:#7955ef;color:#7955ef}
+.hidden{display:none!important}
+.top{display:flex;justify-content:space-between;align-items:center}
+.pill{background:#ffe16a;padding:10px 13px;border-radius:12px;font-weight:bold}
+#timer{font-size:28px;font-weight:900}
+.card{
+  background:linear-gradient(145deg,#9475ff,#6843e6);
+  color:white;text-align:center;padding:42px 12px;
+  border-radius:25px;margin:20px 0;min-height:240px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+#word{font-size:clamp(32px,9vw,48px);font-weight:900;margin:25px 0;overflow-wrap:anywhere}
+#hint{font-size:14px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions button{padding:19px 5px;border-radius:14px}
+.yes{background:#c9f5d8;color:#176b3b}
+.skip{background:#ffe0eb;color:#ad3159}
+.scores{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.score{background:white;border:2px solid #eee6fa;border-radius:15px;padding:15px;text-align:center}
+.score strong{display:block;font-size:30px;margin-top:7px}
+.note{text-align:center;font-size:12px}
+</style>
+</head>
+<body>
+<main>
+<header>🎉 TIME'S UP PARTY</header>
+
+<section id="setup">
+  <div class="hero">
+    <div class="emoji">🎲</div>
+    <h1>설명하고<br><span>맞혀봐!</span></h1>
+    <p>친구들과 함께하는 신나는 단어 게임 💜</p>
+  </div>
+
+  <div class="box">
+    <label>🃏 단어 개수</label>
+    <select id="count">
+      <option value="20">20개</option>
+      <option value="30">30개</option>
+      <option value="40" selected>40개</option>
+    </select>
+
+    <label>🎨 단어 종류</label>
+    <div class="options" id="cats">
+      <button class="opt on" data-cat="인물">🧑 인물·연예인</button>
+      <button class="opt on" data-cat="캐릭터">🎬 캐릭터</button>
+      <button class="opt on" data-cat="사물">🏠 사물</button>
+      <button class="opt on" data-cat="행동">🤸 행동·상황</button>
+    </div>
+
+    <label>⏱️ 한 턴 제한 시간</label>
+    <select id="duration">
+      <option value="30">30초</option>
+      <option value="60" selected>60초</option>
+      <option value="90">90초</option>
+    </select>
+
+    <button class="primary" id="start">게임 시작하기 🚀</button>
+  </div>
+  <p class="note">친구들과 두 팀으로 나눠서 플레이해 보세요!</p>
+</section>
+
+<section id="game" class="hidden">
+  <div class="top">
+    <div class="pill" id="round">1라운드</div>
+    <div id="timer">60초</div>
+  </div>
+
+  <div class="box">
+    <div class="top">
+      <b id="team">💜 A팀 차례</b>
+      <span id="left">남은 단어 40개</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div>✨ GUESS THE WORD ✨</div>
+    <div id="word">피카츄</div>
+    <div id="hint">말로 자유롭게 설명하기</div>
+  </div>
+
+  <div class="actions">
+    <button class="yes" id="correct">✅ 정답!</button>
+    <button class="skip" id="pass">⏭️ 패스</button>
+  </div>
+
+  <div class="scores">
+    <div class="score">💜 A팀<strong id="a">0</strong></div>
+    <div class="score">💛 B팀<strong id="b">0</strong></div>
+  </div>
+  <button class="primary" id="end">턴 종료하기</button>
+  <p class="note">정답을 맞히면 정답 버튼을 눌러 주세요!</p>
+</section>
+
+<section id="result" class="hidden">
+  <div class="hero">
+    <div class="emoji">🏆</div>
+    <h1>게임 <span>종료!</span></h1>
+    <p id="winner"></p>
+  </div>
+  <div class="scores">
+    <div class="score">💜 A팀<strong id="fa">0</strong></div>
+    <div class="score">💛 B팀<strong id="fb">0</strong></div>
+  </div>
+  <button class="primary" id="again">다시 플레이하기 🎉</button>
+</section>
+</main>
+
+<script>
+const BANK={
+인물:["유재석","아이유","손흥민","장원영","백종원","마동석","김종국","강호동","공유","박명수","이효리","김연아","차은우","태연","정국","페이커","신동엽","안유진","봉준호","기안84"],
+캐릭터:["피카츄","짱구","도라에몽","스폰지밥","해리 포터","아이언맨","엘사","슈렉","미니언즈","스파이더맨","올라프","뽀로로","코난","루피","토토로","배트맨","마리오","헬로키티","쿠로미","톰과 제리"],
+사물:["에어프라이어","셀카봉","전동킥보드","무선 이어폰","고데기","리모컨","공기청정기","캐리어","노래방 마이크","안마의자","보조배터리","로봇청소기","삼각대","드라이기","선풍기","스마트워치","전기장판","도어록","휴대폰","우산"],
+행동:["코골기","딸꾹질","번지점프","라면 끓이기","소개팅","지각해서 뛰어가기","귀신의 집 들어가기","뜨거운 음식 먹기","모기 잡기","시험 망치기","셀카 찍기","길 잃기","재채기 참기","몰래 과자 먹기","택배 기다리기","알람 끄고 자기","고음 지르기","매운 음식 먹기","춤추기","웃음 참기"]
+};
+
+let selected=new Set(["인물","캐릭터","사물","행동"]);
+let deck=[],remaining=[],roundNo=0,teamNo=0,scores=[0,0];
+let duration=60,time=60,interval=null,active=false;
+
+const $=id=>document.getElementById(id);
+const shuffle=arr=>arr.sort(()=>Math.random()-.5);
+
+$("cats").querySelectorAll("button").forEach(btn=>{
+  btn.onclick=()=>{
+    let c=btn.dataset.cat;
+    if(selected.has(c)){
+      if(selected.size===1)return;
+      selected.delete(c);btn.classList.remove("on");
+    }else{
+      selected.add(c);btn.classList.add("on");
+    }
+  };
+});
+
+function section(id){
+  ["setup","game","result"].forEach(s=>$(s).classList.toggle("hidden",s!==id));
+}
+function start(){
+  if(!selected.size){alert("단어 종류를 하나 이상 선택해 주세요!");return}
+  let all=[...new Set([...selected].flatMap(c=>BANK[c]))];
+  deck=shuffle(all).slice(0,Math.min(+$("count").value,all.length));
+  remaining=[...deck];roundNo=0;teamNo=0;scores=[0,0];
+  duration=+$("duration").value;
+  $("a").textContent=0;$("b").textContent=0;
+  section("game");showCard();startTurn();
+}
+function showCard(){
+  if(!remaining.length){nextRound();return}
+  $("round").textContent=(roundNo+1)+"라운드";
+  $("team").textContent=teamNo===0?"💜 A팀 차례":"💛 B팀 차례";
+  $("word").textContent=remaining[0];
+  $("left").textContent="남은 단어 "+remaining.length+"개";
+  $("hint").textContent=[
+    "🗣️ 말로 자유롭게 설명하기",
+    "💬 한 단어로만 힌트 주기",
+    "🎭 말없이 몸짓으로 표현하기"
+  ][roundNo];
+}
+function startTurn(){
+  clearInterval(interval);time=duration;active=true;timerView();
+  interval=setInterval(()=>{
+    if(!active)return;
+    time--;timerView();
+    if(time<=0)endTurn();
+  },1000);
+}
+function timerView(){
+  $("timer").textContent=time+"초";
+  $("timer").style.color=time<=10?"#e84667":"#33284e";
+}
+function answer(){
+  if(!active)return;
+  scores[teamNo]++;
+  $(teamNo===0?"a":"b").textContent=scores[teamNo];
+  remaining.shift();
+  showCard();
+}
+function pass(){
+  if(!active||!remaining.length)return;
+  remaining.push(remaining.shift());
+  showCard();
+}
+function endTurn(){
+  if(!active)return;
+  active=false;clearInterval(interval);
+  if(!remaining.length){nextRound();return}
+  teamNo=1-teamNo;
+  showCard();startTurn();
+}
+function nextRound(){
+  clearInterval(interval);
+  if(roundNo<2){
+    roundNo++;remaining=[...deck];teamNo=0;
+    alert((roundNo)+"라운드를 시작합니다!");
+    showCard();startTurn();
+  }else{
+    finish();
+  }
+}
+function finish(){
+  active=false;clearInterval(interval);section("result");
+  $("fa").textContent=scores[0];$("fb").textContent=scores[1];
+  $("winner").textContent=scores[0]===scores[1]?"무승부! 🤝":
+    scores[0]>scores[1]?"💜 A팀 승리!":"💛 B팀 승리!";
+}
+$("start").onclick=start;
+$("correct").onclick=answer;
+$("pass").onclick=pass;
+$("end").onclick=endTurn;
+$("again").onclick=()=>section("setup");
+</script>
+</body>
+</html>
