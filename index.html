@@ -247,15 +247,10 @@ button:disabled {
   text-align: center;
 }
 
-#loadStatus {
-  margin-top: 8px;
-}
-
 </style>
 </head>
 
 <body>
-
 <main>
 
 <header>🎉 TIME'S UP PARTY</header>
@@ -278,6 +273,11 @@ button:disabled {
       <option value="20">20개</option>
       <option value="40" selected>40개</option>
       <option value="60">60개</option>
+      <option value="100">100개</option>
+      <option value="200">200개</option>
+      <option value="500">500개</option>
+      <option value="1000">1000개</option>
+      <option value="2000">2000개</option>
     </select>
 
     <label>🎨 단어 카테고리</label>
@@ -452,15 +452,15 @@ button:disabled {
 </main>
 
 
-<!-- 중요: 단어 파일을 게임 코드보다 먼저 불러온다. -->
+<!-- words.js를 먼저 불러오기 -->
 
 <script src="./words.js"></script>
 
 <script>
 
-/* =================================
-   1. 게임 기본 설정
-================================= */
+/* =====================================
+   1. 기본 설정
+===================================== */
 
 const CATEGORIES = [
   "인물",
@@ -477,8 +477,20 @@ let BANK = {};
 
 let selected = new Set(CATEGORIES);
 
+/*
+  deck:
+  이번 게임에서 사용할 단어 전체 목록.
+
+  remaining:
+  현재 라운드에서 아직 출제할 단어.
+
+  passedWords:
+  패스해서 나중에 다시 출제할 단어.
+*/
+
 let deck = [];
 let remaining = [];
+let passedWords = [];
 
 let roundNo = 0;
 let teamNo = 0;
@@ -490,20 +502,9 @@ let interval = null;
 let active = false;
 
 
-/* =================================
-   2. words.js 카테고리 연결
-================================= */
-
-/*
-  words.js에 저장된 카테고리 이름과
-  게임 화면의 카테고리 이름을 연결한다.
-
-  예:
-  window.TIMESUP_WORDS["만화"] = [...]
-
-  위와 같이 저장되어 있다면
-  만화·애니메이션 카테고리에서 사용한다.
-*/
+/* =====================================
+   2. 카테고리 이름 연결
+===================================== */
 
 const CATEGORY_ALIASES = {
 
@@ -539,9 +540,9 @@ const CATEGORY_ALIASES = {
 };
 
 
-/* =================================
-   3. 단어 목록 불러오기
-================================= */
+/* =====================================
+   3. words.js에서 단어 불러오기
+===================================== */
 
 function loadBank() {
 
@@ -551,9 +552,7 @@ function loadBank() {
 
   BANK = {};
 
-  const globalSeen = new Set();
-
-  let total = 0;
+  const allUniqueWords = new Set();
 
   for (const category of CATEGORIES) {
 
@@ -567,55 +566,36 @@ function loadBank() {
       const list = source[key];
 
       if (Array.isArray(list)) {
-
         collected.push(...list);
-
       }
 
     }
 
-    /*
-      공백 제거 및 카테고리별 중복 제거
-    */
-
     BANK[category] = [
       ...new Set(
-
         collected
-
           .filter(word =>
             typeof word === "string"
           )
-
-          .map(word =>
-            word.trim()
-          )
-
+          .map(word => word.trim())
           .filter(word =>
             word.length >= 2 &&
             word.length <= 80
           )
-
       )
     ];
 
-    total += BANK[category].length;
-
-    for (const word of BANK[category]) {
-
-      globalSeen.add(word);
-
-    }
+    BANK[category].forEach(word => {
+      allUniqueWords.add(word);
+    });
 
   }
 
-  const uniqueTotal = globalSeen.size;
-
-  if (uniqueTotal === 0) {
+  if (allUniqueWords.size === 0) {
 
     $("loadStatus").textContent =
-      "단어를 불러오지 못했어요.\n\n" +
-      "words.js 파일의 경로와 카테고리 이름을 확인해 주세요.";
+      "단어를 불러오지 못했어요.\n" +
+      "words.js 파일과 카테고리 이름을 확인해 주세요.";
 
     $("start").disabled = true;
 
@@ -628,7 +608,7 @@ function loadBank() {
 
   $("loadStatus").textContent =
     "단어 목록 준비 완료!\n" +
-    "전체 고유 단어: " + uniqueTotal + "개\n\n" +
+    "전체 고유 단어: " + allUniqueWords.size + "개\n\n" +
     CATEGORIES.map(category =>
       category + ": " + BANK[category].length + "개"
     ).join("\n");
@@ -641,9 +621,42 @@ function loadBank() {
 }
 
 
-/* =================================
-   4. 카테고리 선택
-================================= */
+/* =====================================
+   4. 단어 섞기
+===================================== */
+
+/*
+  Fisher-Yates 알고리즘으로 단어 순서를 섞는다.
+
+  이 함수는 게임 시작 시 한 번,
+  그리고 새로운 라운드가 시작될 때 한 번씩 사용한다.
+
+  팀이 바뀔 때는 이 함수를 호출하지 않는다.
+*/
+
+function shuffle(array) {
+
+  const result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+
+    const j = Math.floor(
+      Math.random() * (i + 1)
+    );
+
+    [result[i], result[j]] =
+      [result[j], result[i]];
+
+  }
+
+  return result;
+
+}
+
+
+/* =====================================
+   5. 카테고리 선택
+===================================== */
 
 $("categories")
   .querySelectorAll("button")
@@ -698,48 +711,27 @@ $("selectAll").onclick = () => {
 };
 
 
-/* =================================
-   5. 공통 기능
-================================= */
-
-function shuffle(array) {
-
-  const result = [...array];
-
-  for (
-    let i = result.length - 1;
-    i > 0;
-    i--
-  ) {
-
-    const j = Math.floor(
-      Math.random() * (i + 1)
-    );
-
-    [result[i], result[j]] =
-      [result[j], result[i]];
-
-  }
-
-  return result;
-
-}
-
+/* =====================================
+   6. 화면 전환
+===================================== */
 
 function section(id) {
 
-  ["setup", "game", "result"]
-    .forEach(name => {
+  ["setup", "game", "result"].forEach(name => {
 
-      $(name).classList.toggle(
-        "hidden",
-        name !== id
-      );
+    $(name).classList.toggle(
+      "hidden",
+      name !== id
+    );
 
-    });
+  });
 
 }
 
+
+/* =====================================
+   7. 라운드 표시
+===================================== */
 
 function updateRound() {
 
@@ -747,13 +739,9 @@ function updateRound() {
     (roundNo + 1) + "라운드 / 3라운드";
 
   const rules = [
-
     "🗣️ 말로 자유롭게 설명하기",
-
     "💬 한 단어로만 설명하기",
-
     "🎭 말없이 몸짓으로 표현하기"
-
   ];
 
   $("roundRule").textContent =
@@ -761,6 +749,10 @@ function updateRound() {
 
 }
 
+
+/* =====================================
+   8. 점수 표시
+===================================== */
 
 function updateScores() {
 
@@ -770,6 +762,10 @@ function updateScores() {
 
 }
 
+
+/* =====================================
+   9. 팀 표시
+===================================== */
 
 function updateTeam() {
 
@@ -781,13 +777,24 @@ function updateTeam() {
 }
 
 
+/* =====================================
+   10. 남은 단어 표시
+===================================== */
+
 function updateLeft() {
 
+  const totalRemaining =
+    remaining.length + passedWords.length;
+
   $("left").textContent =
-    "남은 단어 " + remaining.length + "개";
+    "남은 단어 " + totalRemaining + "개";
 
 }
 
+
+/* =====================================
+   11. 타이머 정지
+===================================== */
 
 function stopTimer() {
 
@@ -804,9 +811,9 @@ function stopTimer() {
 }
 
 
-/* =================================
-   6. 새 게임 시작
-================================= */
+/* =====================================
+   12. 새 게임 시작
+===================================== */
 
 function startGame() {
 
@@ -819,17 +826,15 @@ function startGame() {
   }
 
   /*
-    선택한 카테고리에서 단어를 모은다.
-    기존 코드의 기본 단어는 사용하지 않는다.
+    선택한 카테고리에서 단어를 가져온다.
+    중복 단어는 한 번만 사용한다.
   */
 
   const pool = [
     ...new Set(
-
       [...selected].flatMap(category =>
         BANK[category] || []
       )
-
     )
   ];
 
@@ -844,12 +849,13 @@ function startGame() {
 
   }
 
-  const requested =
-    Number($("count").value);
+  const requested = Number($("count").value);
 
   /*
-    실제 단어 수가 요청한 개수보다 적으면
-    보유한 단어만 사용한다.
+    사용할 단어를 선택하고 처음 한 번 섞는다.
+
+    이때 정해진 단어 목록을 deck에 저장한다.
+    같은 라운드 중에는 deck을 다시 섞지 않는다.
   */
 
   deck = shuffle(pool).slice(
@@ -857,7 +863,13 @@ function startGame() {
     Math.min(requested, pool.length)
   );
 
-  remaining = shuffle(deck);
+  /*
+    1라운드는 처음 섞은 순서를 그대로 사용한다.
+  */
+
+  remaining = [...deck];
+
+  passedWords = [];
 
   roundNo = 0;
 
@@ -882,9 +894,9 @@ function startGame() {
 }
 
 
-/* =================================
-   7. 팀 차례 준비
-================================= */
+/* =====================================
+   13. 현재 팀의 턴 준비
+===================================== */
 
 function prepareTurn() {
 
@@ -901,8 +913,8 @@ function prepareTurn() {
   updateLeft();
 
   /*
-    다음 팀의 단어는 시작 버튼을 누를 때까지
-    화면에 표시하지 않는다.
+    다음 팀이 시작 버튼을 누르기 전까지
+    단어를 숨긴다.
   */
 
   $("readyMessage").textContent =
@@ -930,9 +942,61 @@ function prepareTurn() {
 }
 
 
-/* =================================
-   8. 턴 시작
-================================= */
+/* =====================================
+   14. 다음 단어 준비
+===================================== */
+
+/*
+  패스한 단어는 현재 남아 있는 일반 단어를
+  먼저 진행한 뒤 다시 출제한다.
+
+  일반 단어의 순서는 바뀌지 않는다.
+*/
+
+function prepareNextWord() {
+
+  /*
+    아직 일반 단어가 남아 있지 않고
+    패스한 단어가 있다면 패스 대기열을 사용한다.
+  */
+
+  if (
+    remaining.length === 0 &&
+    passedWords.length > 0
+  ) {
+
+    remaining = [...passedWords];
+
+    passedWords = [];
+
+  }
+
+  /*
+    두 목록이 모두 비어 있으면
+    이번 라운드가 끝난 것이다.
+  */
+
+  if (
+    remaining.length === 0 &&
+    passedWords.length === 0
+  ) {
+
+    finishRound();
+
+    return false;
+
+  }
+
+  updateLeft();
+
+  return true;
+
+}
+
+
+/* =====================================
+   15. 턴 시작
+===================================== */
 
 function beginTurn() {
 
@@ -940,12 +1004,8 @@ function beginTurn() {
     return;
   }
 
-  if (remaining.length === 0) {
-
-    finishRound();
-
+  if (!prepareNextWord()) {
     return;
-
   }
 
   active = true;
@@ -985,18 +1045,14 @@ function beginTurn() {
 }
 
 
-/* =================================
-   9. 현재 단어 표시
-================================= */
+/* =====================================
+   16. 현재 단어 표시
+===================================== */
 
 function showCurrentWord() {
 
-  if (remaining.length === 0) {
-
-    finishRound();
-
+  if (!prepareNextWord()) {
     return;
-
   }
 
   $("word").textContent =
@@ -1011,9 +1067,9 @@ function showCurrentWord() {
 }
 
 
-/* =================================
-   10. 정답 처리
-================================= */
+/* =====================================
+   17. 정답 처리
+===================================== */
 
 function correctAnswer() {
 
@@ -1022,27 +1078,22 @@ function correctAnswer() {
   }
 
   /*
-    현재 단어를 목록에서 제거한다.
+    정답 단어를 현재 라운드에서 제거한다.
   */
 
   remaining.shift();
-
-  /*
-    현재 팀에 1점을 추가한다.
-  */
 
   scores[teamNo]++;
 
   updateScores();
 
-  updateLeft();
+  /*
+    다음 단어로 넘어간다.
+    단어를 랜덤으로 다시 섞지 않는다.
+  */
 
-  if (remaining.length === 0) {
-
-    finishRound();
-
+  if (!prepareNextWord()) {
     return;
-
   }
 
   showCurrentWord();
@@ -1050,35 +1101,44 @@ function correctAnswer() {
 }
 
 
-/* =================================
-   11. 패스 처리
-================================= */
+/* =====================================
+   18. 패스 처리
+===================================== */
 
 function passWord() {
 
-  if (!active) {
+  if (!active || remaining.length === 0) {
     return;
   }
 
   /*
-    패스한 단어는 목록 맨 뒤로 보낸다.
-    따라서 다른 턴에서 다시 나올 수 있다.
+    패스한 단어를 별도 대기열에 보관한다.
+
+    현재 남은 단어의 순서는 유지되고,
+    패스한 단어는 현재 목록을 다 본 뒤
+    다시 출제된다.
   */
 
   const skipped = remaining.shift();
 
-  remaining.push(skipped);
+  passedWords.push(skipped);
 
-  updateLeft();
+  /*
+    다음 단어로 이동한다.
+  */
+
+  if (!prepareNextWord()) {
+    return;
+  }
 
   showCurrentWord();
 
 }
 
 
-/* =================================
-   12. 턴 종료
-================================= */
+/* =====================================
+   19. 턴 종료
+===================================== */
 
 function finishTurn() {
 
@@ -1089,8 +1149,10 @@ function finishTurn() {
   stopTimer();
 
   /*
-    다음 팀으로 차례를 넘긴다.
-    다음 팀은 시작 버튼을 눌러야 진행된다.
+    팀만 변경한다.
+
+    remaining과 passedWords는 그대로 유지하므로
+    팀이 바뀌어도 단어 순서는 다시 섞이지 않는다.
   */
 
   teamNo = teamNo === 0 ? 1 : 0;
@@ -1100,16 +1162,16 @@ function finishTurn() {
 }
 
 
-/* =================================
-   13. 라운드 종료
-================================= */
+/* =====================================
+   20. 라운드 종료
+===================================== */
 
 function finishRound() {
 
   stopTimer();
 
   /*
-    3라운드가 끝났다면 최종 결과를 표시한다.
+    마지막 라운드라면 결과 화면으로 이동한다.
   */
 
   if (roundNo >= 2) {
@@ -1121,16 +1183,21 @@ function finishRound() {
   }
 
   /*
-    다음 라운드에서는 처음에 선택한
-    동일한 단어 목록을 다시 사용한다.
+    다음 라운드로 이동한다.
   */
 
   roundNo++;
 
+  /*
+    라운드가 바뀔 때만 단어 순서를 새로 섞는다.
+  */
+
   remaining = shuffle(deck);
 
+  passedWords = [];
+
   /*
-    새 라운드는 A팀부터 시작한다.
+    새로운 라운드는 A팀부터 시작한다.
   */
 
   teamNo = 0;
@@ -1142,9 +1209,9 @@ function finishRound() {
 }
 
 
-/* =================================
-   14. 최종 결과
-================================= */
+/* =====================================
+   21. 게임 결과
+===================================== */
 
 function showResult() {
 
@@ -1157,17 +1224,17 @@ function showResult() {
   if (scores[0] > scores[1]) {
 
     $("winner").textContent =
-      "💜 A팀 승리! 축하해!";
+      "💜 A팀 승리! 앙!";
 
   } else if (scores[1] > scores[0]) {
 
     $("winner").textContent =
-      "💛 B팀 승리! 축하해!";
+      "💛 B팀 승리! 앙!";
 
   } else {
 
     $("winner").textContent =
-      "🤝 무승부! 두 팀 모두 잘했어!";
+      "🤝 무승부! 앙!";
 
   }
 
@@ -1176,9 +1243,9 @@ function showResult() {
 }
 
 
-/* =================================
-   15. 버튼 연결
-================================= */
+/* =====================================
+   22. 버튼 연결
+===================================== */
 
 $("start").onclick = startGame;
 
@@ -1205,14 +1272,9 @@ $("again").onclick = () => {
 };
 
 
-/* =================================
-   16. 처음 실행
-================================= */
-
-/*
-  words.js를 먼저 불러온 다음
-  로컬 단어 목록을 읽는다.
-*/
+/* =====================================
+   23. 단어 목록 초기화
+===================================== */
 
 loadBank();
 
