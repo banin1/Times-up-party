@@ -4,67 +4,256 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TIME'S UP PARTY 🎉</title>
+
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;background:#fff8f2;color:#33284e;
-  font-family:Arial,"Apple SD Gothic Neo",sans-serif;
+* {
+  box-sizing: border-box;
 }
-main{max-width:520px;margin:auto;padding:22px 18px 40px}
-header{text-align:center;font-weight:900;color:#7955ef;font-size:22px}
-.hero{text-align:center;padding:25px 0}
-.hero .emoji{font-size:65px}
-h1{font-size:37px;margin:10px 0}
-h1 span{color:#7955ef}
-p{color:#8c829d;line-height:1.6}
-.box{
-  background:white;border:2px solid #eee6fa;
-  border-radius:24px;padding:22px;margin:15px 0;
-  box-shadow:0 5px 0 #eee6fa;
+
+body {
+  margin: 0;
+  background: #fff8f5;
+  color: #35264f;
+  font-family: Arial, sans-serif;
 }
-label{display:block;font-weight:bold;margin:17px 0 9px}
-select{
-  width:100%;padding:13px;border-radius:12px;
-  border:2px solid #eee6fa;background:#fff;color:#33284e;
+
+main {
+  max-width: 520px;
+  margin: auto;
+  padding: 20px 16px 40px;
 }
-button{border:0;cursor:pointer;font-size:16px;font-weight:bold}
-.primary{
-  width:100%;padding:17px;background:#7955ef;color:white;
-  border-radius:15px;margin-top:15px;font-size:19px;
+
+header {
+  text-align: center;
+  font-size: 23px;
+  font-weight: 900;
+  color: #8058ef;
+  padding: 12px;
 }
-.options{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.opt{
-  background:#faf7ff;border:2px solid #eee6fa;
-  padding:13px 5px;border-radius:12px;color:#51456c;
+
+.hero {
+  text-align: center;
+  padding: 20px 0;
 }
-.opt.on{background:#eee7ff;border-color:#7955ef;color:#7955ef}
-.hidden{display:none!important}
-.top{display:flex;justify-content:space-between;align-items:center}
-.pill{background:#ffe16a;padding:10px 13px;border-radius:12px;font-weight:bold}
-#timer{font-size:28px;font-weight:900}
-.card{
-  background:linear-gradient(145deg,#9475ff,#6843e6);
-  color:white;text-align:center;padding:42px 12px;
-  border-radius:25px;margin:20px 0;min-height:240px;
-  display:flex;flex-direction:column;justify-content:center;
+
+.emoji {
+  font-size: 60px;
 }
-#word{font-size:clamp(32px,9vw,48px);font-weight:900;margin:25px 0;overflow-wrap:anywhere}
-#hint{font-size:14px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.actions button{padding:19px 5px;border-radius:14px}
-.yes{background:#c9f5d8;color:#176b3b}
-.skip{background:#ffe0eb;color:#ad3159}
-.scores{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
-.score{background:white;border:2px solid #eee6fa;border-radius:15px;padding:15px;text-align:center}
-.score strong{display:block;font-size:30px;margin-top:7px}
-.note{text-align:center;font-size:12px}
+
+h1 {
+  font-size: 35px;
+  margin: 12px 0;
+}
+
+h1 span {
+  color: #8058ef;
+}
+
+p {
+  color: #8c819d;
+  line-height: 1.6;
+}
+
+.box {
+  background: white;
+  border: 2px solid #eee5ff;
+  border-radius: 22px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 4px 0 #eee5ff;
+}
+
+label {
+  display: block;
+  margin: 18px 0 9px;
+  font-weight: bold;
+}
+
+select {
+  width: 100%;
+  padding: 13px;
+  border: 2px solid #eee5ff;
+  border-radius: 12px;
+  background: white;
+  color: #35264f;
+  font-size: 15px;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.primary {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border-radius: 15px;
+  background: #8058ef;
+  color: white;
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+.primary:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.category {
+  background: #faf7ff;
+  color: #635477;
+  border: 2px solid #eee5ff;
+  border-radius: 12px;
+  padding: 13px 5px;
+}
+
+.category.on {
+  background: #eee7ff;
+  border-color: #8058ef;
+  color: #8058ef;
+}
+
+.small-button {
+  background: #f1ebff;
+  color: #8058ef;
+  padding: 10px 13px;
+  border-radius: 10px;
+}
+
+.status {
+  background: #f7f1ff;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.pill {
+  background: #ffe66d;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+#timer {
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.card {
+  background: linear-gradient(145deg, #9878ff, #6843df);
+  color: white;
+  border-radius: 25px;
+  padding: 28px 15px;
+  margin: 18px 0;
+  min-height: 230px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-label {
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+#word {
+  font-size: clamp(30px, 8vw, 45px);
+  font-weight: 900;
+  margin: 28px 0;
+  overflow-wrap: anywhere;
+}
+
+#readyMessage {
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1.6;
+}
+
+#hint {
+  font-size: 14px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.actions button {
+  padding: 18px 5px;
+  border-radius: 14px;
+}
+
+.yes {
+  background: #c9f5d8;
+  color: #176b3b;
+}
+
+.skip {
+  background: #ffe0eb;
+  color: #ad3159;
+}
+
+.scores {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.score {
+  background: white;
+  border: 2px solid #eee5ff;
+  border-radius: 15px;
+  padding: 15px 5px;
+  text-align: center;
+}
+
+.score strong {
+  display: block;
+  font-size: 32px;
+  margin-top: 7px;
+}
+
+.note {
+  font-size: 12px;
+  text-align: center;
+}
+
 </style>
 </head>
+
 <body>
 <main>
+
 <header>🎉 TIME'S UP PARTY</header>
 
 <section id="setup">
+
   <div class="hero">
     <div class="emoji">🎲</div>
     <h1>설명하고<br><span>맞혀봐!</span></h1>
@@ -72,37 +261,85 @@ button{border:0;cursor:pointer;font-size:16px;font-weight:bold}
   </div>
 
   <div class="box">
-    <label>🃏 단어 개수</label>
+
+    <label>🃏 출제할 단어 개수</label>
+
     <select id="count">
       <option value="20">20개</option>
-      <option value="30">30개</option>
       <option value="40" selected>40개</option>
+      <option value="60">60개</option>
+      <option value="100">100개</option>
+      <option value="200">200개</option>
+      <option value="500">500개</option>
+      <option value="1000">1000개</option>
+      <option value="2000">2000개</option>
     </select>
 
-    <label>🎨 단어 종류</label>
-    <div class="options" id="cats">
-      <button class="opt on" data-cat="인물">🧑 인물·연예인</button>
-      <button class="opt on" data-cat="캐릭터">🎬 캐릭터</button>
-      <button class="opt on" data-cat="사물">🏠 사물</button>
-      <button class="opt on" data-cat="행동">🤸 행동·상황</button>
+    <label>🎨 단어 카테고리</label>
+
+    <button class="small-button" id="selectAll">
+      전체 선택 / 전체 해제
+    </button>
+
+    <div class="category-grid" id="categories"
+         style="margin-top:12px">
+
+      <button class="category on" data-cat="인물">
+        🧑 인물
+      </button>
+
+      <button class="category on" data-cat="사물">
+        🏠 사물
+      </button>
+
+      <button class="category on" data-cat="방송명">
+        📺 방송명
+      </button>
+
+      <button class="category on" data-cat="영화">
+        🎬 영화
+      </button>
+
+      <button class="category on" data-cat="드라마">
+        🍿 드라마
+      </button>
+
+      <button class="category on" data-cat="만화·애니메이션">
+        🐰 만화·애니
+      </button>
+
     </div>
 
-    <label>⏱️ 한 턴 제한 시간</label>
-    <select id="duration">
-      <option value="30">30초</option>
-      <option value="60" selected>60초</option>
-      <option value="90">90초</option>
-    </select>
+    <label>⏱️ 턴 제한 시간</label>
 
-    <button class="primary" id="start">게임 시작하기 🚀</button>
+    <div class="status">
+      40초 고정 · 팀이 바뀌면 시작 버튼을 눌러야 진행돼!
+    </div>
+
+    <label>📚 단어 목록</label>
+
+    <div id="loadStatus" class="status">
+      단어 목록을 준비하고 있어요...
+    </div>
+
+    <button class="primary" id="start" disabled>
+      단어 목록 불러오는 중...
+    </button>
+
   </div>
-  <p class="note">친구들과 두 팀으로 나눠서 플레이해 보세요!</p>
+
+  <p class="note">
+    ※ 단어 목록을 불러오려면 인터넷 연결이 필요해.
+  </p>
+
 </section>
 
+
 <section id="game" class="hidden">
+
   <div class="top">
-    <div class="pill" id="round">1라운드</div>
-    <div id="timer">60초</div>
+    <div class="pill" id="round">1라운드 / 3라운드</div>
+    <div id="timer">40초</div>
   </div>
 
   <div class="box">
@@ -110,144 +347,674 @@ button{border:0;cursor:pointer;font-size:16px;font-weight:bold}
       <b id="team">💜 A팀 차례</b>
       <span id="left">남은 단어 40개</span>
     </div>
+
+    <p id="roundRule">🗣️ 말로 자유롭게 설명하기</p>
   </div>
 
   <div class="card">
-    <div>✨ GUESS THE WORD ✨</div>
-    <div id="word">피카츄</div>
-    <div id="hint">말로 자유롭게 설명하기</div>
+
+    <div class="card-label">✨ TIME'S UP ✨</div>
+
+    <div id="readyMessage">
+      A팀 준비됐나요?
+    </div>
+
+    <div id="word" class="hidden"></div>
+
+    <div id="hint">
+      시작 버튼을 눌러 주세요!
+    </div>
+
   </div>
 
-  <div class="actions">
-    <button class="yes" id="correct">✅ 정답!</button>
-    <button class="skip" id="pass">⏭️ 패스</button>
+  <button class="primary" id="beginTurn">
+    🚀 시작하기
+  </button>
+
+  <div class="actions hidden" id="actions">
+
+    <button class="yes" id="correct">
+      ✅ 정답!
+    </button>
+
+    <button class="skip" id="pass">
+      ⏭️ 패스
+    </button>
+
   </div>
 
   <div class="scores">
-    <div class="score">💜 A팀<strong id="a">0</strong></div>
-    <div class="score">💛 B팀<strong id="b">0</strong></div>
+
+    <div class="score">
+      💜 A팀
+      <strong id="a">0</strong>
+    </div>
+
+    <div class="score">
+      💛 B팀
+      <strong id="b">0</strong>
+    </div>
+
   </div>
-  <button class="primary" id="end">턴 종료하기</button>
-  <p class="note">정답을 맞히면 정답 버튼을 눌러 주세요!</p>
+
+  <button class="primary hidden" id="end">
+    턴 종료하기
+  </button>
+
+  <p class="note">
+    정답 버튼을 눌러야 점수가 올라가!
+  </p>
+
 </section>
 
+
 <section id="result" class="hidden">
+
   <div class="hero">
     <div class="emoji">🏆</div>
     <h1>게임 <span>종료!</span></h1>
     <p id="winner"></p>
   </div>
+
   <div class="scores">
-    <div class="score">💜 A팀<strong id="fa">0</strong></div>
-    <div class="score">💛 B팀<strong id="fb">0</strong></div>
+
+    <div class="score">
+      💜 A팀
+      <strong id="fa">0</strong>
+    </div>
+
+    <div class="score">
+      💛 B팀
+      <strong id="fb">0</strong>
+    </div>
+
   </div>
-  <button class="primary" id="again">다시 플레이하기 🎉</button>
+
+  <button class="primary" id="again">
+    다시 플레이하기 🎉
+  </button>
+
 </section>
+
 </main>
 
+
 <script>
-const BANK={
-인물:["유재석","아이유","손흥민","장원영","백종원","마동석","김종국","강호동","공유","박명수","이효리","김연아","차은우","태연","정국","페이커","신동엽","안유진","봉준호","기안84"],
-캐릭터:["피카츄","짱구","도라에몽","스폰지밥","해리 포터","아이언맨","엘사","슈렉","미니언즈","스파이더맨","올라프","뽀로로","코난","루피","토토로","배트맨","마리오","헬로키티","쿠로미","톰과 제리"],
-사물:["에어프라이어","셀카봉","전동킥보드","무선 이어폰","고데기","리모컨","공기청정기","캐리어","노래방 마이크","안마의자","보조배터리","로봇청소기","삼각대","드라이기","선풍기","스마트워치","전기장판","도어록","휴대폰","우산"],
-행동:["코골기","딸꾹질","번지점프","라면 끓이기","소개팅","지각해서 뛰어가기","귀신의 집 들어가기","뜨거운 음식 먹기","모기 잡기","시험 망치기","셀카 찍기","길 잃기","재채기 참기","몰래 과자 먹기","택배 기다리기","알람 끄고 자기","고음 지르기","매운 음식 먹기","춤추기","웃음 참기"]
+const API = "https://ko.wikipedia.org/w/api.php";
+
+const CATEGORIES = [
+  "인물",
+  "사물",
+  "방송명",
+  "영화",
+  "드라마",
+  "만화·애니메이션"
+];
+
+/*
+  카테고리별로 관련 위키백과 분류를 검색한다.
+  실제로 확보하는 단어 수는 자료에 따라 달라질 수 있다.
+*/
+
+const ROOTS = {
+
+  "인물": [
+    "대한민국의 배우",
+    "대한민국의 가수",
+    "대한민국의 방송인",
+    "대한민국의 코미디언",
+    "대한민국의 운동 선수",
+    "대한민국의 연예인",
+    "대한민국의 작가"
+  ],
+
+  "사물": [
+    "가전제품",
+    "전자제품",
+    "생활용품",
+    "가구",
+    "악기",
+    "교통수단",
+    "식기",
+    "의류",
+    "도구",
+    "음식"
+  ],
+
+  "방송명": [
+    "대한민국의 텔레비전 프로그램",
+    "대한민국의 예능 프로그램",
+    "대한민국의 음악 프로그램",
+    "텔레비전 프로그램"
+  ],
+
+  "영화": [
+    "대한민국의 영화",
+    "미국의 영화",
+    "일본의 영화",
+    "영화 작품"
+  ],
+
+  "드라마": [
+    "대한민국의 텔레비전 드라마",
+    "미국의 텔레비전 드라마",
+    "일본의 텔레비전 드라마",
+    "중국의 텔레비전 드라마"
+  ],
+
+  "만화·애니메이션": [
+    "대한민국의 애니메이션",
+    "일본의 애니메이션",
+    "대한민국의 만화",
+    "일본의 만화",
+    "애니메이션 영화"
+  ]
+
 };
 
-let selected=new Set(["인물","캐릭터","사물","행동"]);
-let deck=[],remaining=[],roundNo=0,teamNo=0,scores=[0,0];
-let duration=60,time=60,interval=null,active=false;
 
-const $=id=>document.getElementById(id);
-const shuffle=arr=>arr.sort(()=>Math.random()-.5);
+/*
+  인터넷 연결에 문제가 있을 때 사용할 기본 단어.
+*/
 
-$("cats").querySelectorAll("button").forEach(btn=>{
-  btn.onclick=()=>{
-    let c=btn.dataset.cat;
-    if(selected.has(c)){
-      if(selected.size===1)return;
-      selected.delete(c);btn.classList.remove("on");
-    }else{
-      selected.add(c);btn.classList.add("on");
-    }
-  };
-});
+const FALLBACK = {
 
-function section(id){
-  ["setup","game","result"].forEach(s=>$(s).classList.toggle("hidden",s!==id));
-}
-function start(){
-  if(!selected.size){alert("단어 종류를 하나 이상 선택해 주세요!");return}
-  let all=[...new Set([...selected].flatMap(c=>BANK[c]))];
-  deck=shuffle(all).slice(0,Math.min(+$("count").value,all.length));
-  remaining=[...deck];roundNo=0;teamNo=0;scores=[0,0];
-  duration=+$("duration").value;
-  $("a").textContent=0;$("b").textContent=0;
-  section("game");showCard();startTurn();
-}
-function showCard(){
-  if(!remaining.length){nextRound();return}
-  $("round").textContent=(roundNo+1)+"라운드";
-  $("team").textContent=teamNo===0?"💜 A팀 차례":"💛 B팀 차례";
-  $("word").textContent=remaining[0];
-  $("left").textContent="남은 단어 "+remaining.length+"개";
-  $("hint").textContent=[
-    "🗣️ 말로 자유롭게 설명하기",
-    "💬 한 단어로만 힌트 주기",
-    "🎭 말없이 몸짓으로 표현하기"
-  ][roundNo];
-}
-function startTurn(){
-  clearInterval(interval);time=duration;active=true;timerView();
-  interval=setInterval(()=>{
-    if(!active)return;
-    time--;timerView();
-    if(time<=0)endTurn();
-  },1000);
-}
-function timerView(){
-  $("timer").textContent=time+"초";
-  $("timer").style.color=time<=10?"#e84667":"#33284e";
-}
-function answer(){
-  if(!active)return;
-  scores[teamNo]++;
-  $(teamNo===0?"a":"b").textContent=scores[teamNo];
-  remaining.shift();
-  showCard();
-}
-function pass(){
-  if(!active||!remaining.length)return;
-  remaining.push(remaining.shift());
-  showCard();
-}
-function endTurn(){
-  if(!active)return;
-  active=false;clearInterval(interval);
-  if(!remaining.length){nextRound();return}
-  teamNo=1-teamNo;
-  showCard();startTurn();
-}
-function nextRound(){
-  clearInterval(interval);
-  if(roundNo<2){
-    roundNo++;remaining=[...deck];teamNo=0;
-    alert((roundNo)+"라운드를 시작합니다!");
-    showCard();startTurn();
-  }else{
-    finish();
+  "인물": [
+    "유재석","아이유","손흥민","장원영","백종원",
+    "마동석","김연아","공유","박명수","김종국",
+    "태연","정국","차은우","안유진","페이커",
+    "봉준호","신동엽","강호동","이효리","김고은"
+  ],
+
+  "사물": [
+    "휴대폰","우산","캐리어","보조배터리","선풍기",
+    "드라이기","리모컨","로봇청소기","스마트워치",
+    "에어프라이어","고데기","전동킥보드","책상",
+    "의자","냉장고","전자레인지","키보드","마우스",
+    "헤드폰","카메라"
+  ],
+
+  "방송명": [
+    "무한도전","런닝맨","놀면 뭐하니?",
+    "유 퀴즈 온 더 블럭","나 혼자 산다",
+    "아는 형님","복면가왕","슈퍼맨이 돌아왔다",
+    "1박 2일","전지적 참견 시점",
+    "나는 SOLO","미스터리 음악쇼 복면가왕"
+  ],
+
+  "영화": [
+    "기생충","극한직업","부산행","명량",
+    "겨울왕국","타이타닉","아바타","인터스텔라",
+    "인셉션","해리 포터","어벤져스","기생수",
+    "알라딘","라라랜드","범죄도시","괴물",
+    "신과함께","국제시장","왕의 남자","베테랑"
+  ],
+
+  "드라마": [
+    "도깨비","오징어 게임","응답하라 1988",
+    "더 글로리","이태원 클라쓰","시그널",
+    "슬기로운 의사생활","별에서 온 그대",
+    "태양의 후예","킹덤","미생","꽃보다 남자",
+    "상속자들","스카이 캐슬","이상한 변호사 우영우",
+    "사랑의 불시착","비밀의 숲","재벌집 막내아들"
+  ],
+
+  "만화·애니메이션": [
+    "짱구","도라에몽","피카츄","스폰지밥",
+    "명탐정 코난","원피스","나루토","드래곤볼",
+    "슬램덩크","귀멸의 칼날","진격의 거인",
+    "포켓몬스터","뽀로로","톰과 제리",
+    "마리오","헬로키티","쿠로미","토토로",
+    "하울의 움직이는 성","센과 치히로의 행방불명"
+  ]
+
+};
+
+
+const $ = id => document.getElementById(id);
+
+let BANK = {};
+let allWords = [];
+
+let selected = new Set(CATEGORIES);
+
+let deck = [];
+let remaining = [];
+
+let roundNo = 0;
+let teamNo = 0;
+
+let scores = [0, 0];
+
+let time = 40;
+let interval = null;
+let active = false;
+
+
+/* 단어 제목 정리 */
+
+function cleanTitle(raw) {
+
+  let title = raw
+    .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  title = title.replace(
+    /\s*\((배우|가수|방송인|영화|드라마|애니메이션|만화|축구 선수|야구 선수)\)$/,
+    ""
+  );
+
+  if (title.length < 2 || title.length > 50) {
+    return "";
   }
+
+  if (
+    /(목록|방법|과정|개념|이론|법칙|현상|사건|논란|학문|산업|하는 법|하기)$/.test(title)
+  ) {
+    return "";
+  }
+
+  if (
+    /^(분류|파일|틀|위키백과):/.test(title)
+  ) {
+    return "";
+  }
+
+  return title;
 }
-function finish(){
-  active=false;clearInterval(interval);section("result");
-  $("fa").textContent=scores[0];$("fb").textContent=scores[1];
-  $("winner").textContent=scores[0]===scores[1]?"무승부! 🤝":
-    scores[0]>scores[1]?"💜 A팀 승리!":"💛 B팀 승리!";
+
+
+/* 위키백과 카테고리에서 제목 수집 */
+
+async function collectCategory(root, target) {
+
+  const results = [];
+  const found = new Set();
+
+  const queue = [{
+    title: "분류:" + root,
+    depth: 0
+  }];
+
+  const seenCats = new Set();
+
+  let requests = 0;
+  const maxRequests = 12;
+
+  while (
+    queue.length &&
+    results.length < target &&
+    requests < maxRequests
+  ) {
+
+    const current = queue.shift();
+
+    if (seenCats.has(current.title)) {
+      continue;
+    }
+
+    seenCats.add(current.title);
+
+    let continuation = null;
+
+    do {
+
+      const params = new URLSearchParams({
+        action: "query",
+        list: "categorymembers",
+        cmtitle: current.title,
+        cmlimit: "500",
+        cmtype: "page|subcat",
+        format: "json",
+        origin: "*"
+      });
+
+      if (continuation) {
+        params.set("cmcontinue", continuation);
+      }
+
+      try {
+
+        const response = await fetch(
+          API + "?" + params.toString()
+        );
+
+        if (!response.ok) {
+          break;
+        }
+
+        const data = await response.json();
+
+        const members =
+          data.query?.categorymembers || [];
+
+        for (const member of members) {
+
+          if (member.ns === 0) {
+
+            const title = cleanTitle(member.title);
+
+            if (title && !found.has(title)) {
+              found.add(title);
+              results.push(title);
+            }
+
+          } else if (
+            member.ns === 14 &&
+            current.depth < 2 &&
+            queue.length < 80
+          ) {
+
+            queue.push({
+              title: member.title,
+              depth: current.depth + 1
+            });
+
+          }
+
+        }
+
+        continuation =
+          data.continue?.cmcontinue || null;
+
+      } catch (error) {
+
+        continuation = null;
+
+      }
+
+      requests++;
+
+      if (continuation) {
+        await new Promise(resolve =>
+          setTimeout(resolve, 80)
+        );
+      }
+
+    } while (
+      continuation &&
+      results.length < target &&
+      requests < maxRequests
+    );
+
+  }
+
+  return results;
 }
-$("start").onclick=start;
-$("correct").onclick=answer;
-$("pass").onclick=pass;
-$("end").onclick=endTurn;
-$("again").onclick=()=>section("setup");
-</script>
-</body>
-</html>
+
+
+/* 카테고리별 단어 목록 구성 */
+
+async function loadOneCategory(category) {
+
+  const words = [...FALLBACK[category]];
+  const found = new Set(words);
+
+  for (const root of ROOTS[category]) {
+
+    if (words.length >= 500) {
+      break;
+    }
+
+    const need = 500 - words.length;
+
+    const fetched = await collectCategory(
+      root,
+      need
+    );
+
+    for (const raw of fetched) {
+
+      const title = cleanTitle(raw);
+
+      if (title && !found.has(title)) {
+        found.add(title);
+        words.push(title);
+      }
+
+      if (words.length >= 500) {
+        break;
+      }
+
+    }
+
+  }
+
+  return words;
+}
+
+
+/* 최대 2000개의 중복 없는 단어 구성 */
+
+async function loadBank() {
+
+  $("start").disabled = true;
+
+  const rawBank = {};
+
+  try {
+
+    for (const category of CATEGORIES) {
+
+      $("loadStatus").textContent =
+        category + " 단어를 불러오는 중...";
+
+      rawBank[category] =
+        await loadOneCategory(category);
+
+    }
+
+  } catch (error) {
+
+    for (const category of CATEGORIES) {
+      rawBank[category] =
+        rawBank[category] || [...FALLBACK[category]];
+    }
+
+  }
+
+  /*
+    카테고리별로 최대 500개를 수집한 뒤
+    중복을 제거하고 최대 2000개를 구성한다.
+  */
+
+  BANK = {};
+
+  const quotas = {
+    "인물": 334,
+    "사물": 334,
+    "방송명": 333,
+    "영화": 333,
+    "드라마": 333,
+    "만화·애니메이션": 333
+  };
+
+  const used = new Set();
+
+  for (const category of CATEGORIES) {
+
+    BANK[category] = [];
+
+    for (const word of rawBank[category]) {
+
+      if (
+        BANK[category].length >= quotas[category]
+      ) {
+        break;
+      }
+
+      if (!used.has(word)) {
+        used.add(word);
+        BANK[category].push(word);
+      }
+
+    }
+
+  }
+
+  /*
+    어떤 카테고리의 단어가 부족하면
+    다른 카테고리에 남아 있는 단어로 보충한다.
+  */
+
+  for (const category of CATEGORIES) {
+
+    for (const word of rawBank[category]) {
+
+      if (used.size >= 2000) {
+        break;
+      }
+
+      if (!used.has(word)) {
+        used.add(word);
+        BANK[category].push(word);
+      }
+
+    }
+
+    if (used.size >= 2000) {
+      break;
+    }
+
+  }
+
+  allWords = [...used];
+
+  $("loadStatus").textContent =
+    "확보한 단어: " + allWords.length +
+    "개 / 목표 2,000개\n" +
+    "카테고리를 선택하고 게임을 시작해 줘!";
+
+  $("start").disabled = false;
+  $("start").textContent = "게임 시작하기 🚀";
+
+}
+
+
+/* 카테고리 선택 */
+
+$("categories")
+  .querySelectorAll("button")
+  .forEach(button => {
+
+    button.onclick = () => {
+
+      const category = button.dataset.cat;
+
+      if (selected.has(category)) {
+
+        selected.delete(category);
+        button.classList.remove("on");
+
+      } else {
+
+        selected.add(category);
+        button.classList.add("on");
+
+      }
+
+    };
+
+  });
+
+
+$("selectAll").onclick = () => {
+
+  const allSelected =
+    selected.size === CATEGORIES.length;
+
+  if (allSelected) {
+
+    selected.clear();
+
+  } else {
+
+    selected = new Set(CATEGORIES);
+
+  }
+
+  $("categories")
+    .querySelectorAll("button")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "on",
+        selected.has(button.dataset.cat)
+      );
+
+    });
+
+};
+
+
+/* 화면 전환 */
+
+function section(id) {
+
+  ["setup", "game", "result"].forEach(name => {
+
+    $(name).classList.toggle(
+      "hidden",
+      name !== id
+    );
+
+  });
+
+}
+
+
+/* 현재 라운드 표시 */
+
+function updateRound() {
+
+  $("round").textContent =
+    (roundNo + 1) + "라운드 / 3라운드";
+
+  const rules = [
+    "🗣️ 말로 자유롭게 설명하기",
+    "💬 한 단어로만 설명하기",
+    "🎭 말없이 몸짓으로 표현하기"
+  ];
+
+  $("roundRule").textContent = rules[roundNo];
+
+}
+
+
+/* 점수 표시 */
+
+function updateScores() {
+
+  $("a").textContent = scores[0];
+  $("b").textContent = scores[1];
+
+}
+
+
+/* 현재 팀 표시 */
+
+function updateTeam() {
+
+  $("team").textContent =
+    teamNo === 0
+      ? "💜 A팀 차례"
+      : "💛 B팀 차례";
+
+}
+
+
+/* 새 게임 시작 */
+
+function startGame() {
+
+  if (!selected.size) {
+
+    alert("카테고리를 하나 이상 선택해 줘!");
+    return;
+
+  }
+
+  const pool = [
+    ...new Set(
+      [...selected].flatMap(category
