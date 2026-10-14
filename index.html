@@ -117,7 +117,7 @@ button:disabled {
   padding: 12px;
   border-radius: 12px;
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.7;
   overflow-wrap: anywhere;
   white-space: pre-line;
 }
@@ -206,7 +206,7 @@ button:disabled {
 
 .scores {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin: 18px 0;
 }
@@ -230,9 +230,7 @@ button:disabled {
   text-align: center;
 }
 
-/* =====================================
-   플레이어별 단어 미리보기
-===================================== */
+/* 플레이어별 단어 미리보기 */
 
 .preview-words {
   display: grid;
@@ -268,6 +266,47 @@ button:disabled {
   line-height: 1.5;
 }
 
+/* 팀별 색상 */
+
+.team-a {
+  border-color: #d9caff;
+}
+
+.team-b {
+  border-color: #ffe69a;
+}
+
+.team-c {
+  border-color: #b8edce;
+}
+
+.team-d {
+  border-color: #b8e8ff;
+}
+
+/* 작은 화면 */
+
+@media (max-width: 360px) {
+
+  main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .box {
+    padding: 15px;
+  }
+
+  .scores {
+    gap: 7px;
+  }
+
+}
+
 </style>
 
 </head>
@@ -280,7 +319,7 @@ button:disabled {
 
 
 <!-- =====================================
-     1. 게임 설정 화면
+     1. 게임 설정
 ===================================== -->
 
 <section id="setup">
@@ -308,9 +347,7 @@ button:disabled {
     <select id="count">
 
       <option value="20">20개</option>
-
       <option value="40" selected>40개</option>
-
       <option value="60">60개</option>
 
     </select>
@@ -320,34 +357,43 @@ button:disabled {
 
     <select id="playerCount">
 
-      <option value="2">2명</option>
-
-      <option value="3">3명</option>
-
       <option value="4" selected>4명</option>
-
       <option value="5">5명</option>
-
       <option value="6">6명</option>
-
       <option value="7">7명</option>
-
       <option value="8">8명</option>
-
       <option value="9">9명</option>
-
       <option value="10">10명</option>
+      <option value="11">11명</option>
+      <option value="12">12명</option>
+      <option value="13">13명</option>
+      <option value="14">14명</option>
+      <option value="15">15명</option>
+      <option value="16">16명</option>
+
+    </select>
+
+
+    <label for="teamCount">🏆 팀 개수</label>
+
+    <select id="teamCount">
+
+      <option value="2" selected>2팀</option>
+      <option value="3">3팀</option>
+      <option value="4">4팀</option>
 
     </select>
 
 
     <div class="status" style="margin-top:20px">
 
-      🎲 모든 카테고리에서 단어가 무작위로 출제돼!
+      🎲 모든 카테고리에서 단어를 무작위로 출제해!
 
-      👀 게임 시작 전에는 각자 배정된 단어만 미리 볼 수 있어.
+      👀 게임 시작 전에는 플레이어별로 배정된 단어만 미리 볼 수 있어.
 
-      🧠 한 사람씩 20초 동안 단어를 확인해 봐!
+      🧠 각 플레이어는 20초 동안 단어를 확인해.
+
+      🔀 매 라운드마다 문제 순서가 새롭게 섞여!
 
     </div>
 
@@ -358,8 +404,7 @@ button:disabled {
 
       40초 고정
 
-      팀이 바뀌면 시작 버튼을 눌러야
-      타이머가 작동해!
+      각 팀은 자기 차례에 시작 버튼을 눌러야 타이머가 작동해!
 
     </div>
 
@@ -393,7 +438,7 @@ button:disabled {
 
 
 <!-- =====================================
-     2. 플레이어별 단어 미리보기 화면
+     2. 플레이어별 단어 미리보기
 ===================================== -->
 
 <section id="preview" class="hidden">
@@ -489,24 +534,18 @@ button:disabled {
     <div class="top">
 
       <b id="team">
-
         💜 A팀 차례
-
       </b>
 
       <span id="left">
-
         남은 단어 40개
-
       </span>
 
     </div>
 
 
     <p id="roundRule">
-
       🗣️ 말로 자유롭게 설명하기
-
     </p>
 
   </div>
@@ -515,16 +554,12 @@ button:disabled {
   <div class="card">
 
     <div class="card-label">
-
       ✨ TIME'S UP ✨
-
     </div>
 
 
     <div id="readyMessage">
-
       A팀 준비됐나요?
-
     </div>
 
 
@@ -532,9 +567,7 @@ button:disabled {
 
 
     <div id="hint">
-
       시작 버튼을 눌러 주세요!
-
     </div>
 
   </div>
@@ -550,40 +583,19 @@ button:disabled {
   <div class="actions hidden" id="actions">
 
     <button class="yes" id="correct">
-
       ✅ 정답!
-
     </button>
 
     <button class="skip" id="pass">
-
       ⏭️ 패스
-
     </button>
 
   </div>
 
 
-  <div class="scores">
+  <!-- 팀 수에 맞춰 점수판을 자동 생성 -->
 
-    <div class="score">
-
-      💜 A팀
-
-      <strong id="a">0</strong>
-
-    </div>
-
-
-    <div class="score">
-
-      💛 B팀
-
-      <strong id="b">0</strong>
-
-    </div>
-
-  </div>
+  <div class="scores" id="scores"></div>
 
 
   <button class="primary hidden" id="end">
@@ -604,7 +616,7 @@ button:disabled {
 
 
 <!-- =====================================
-     4. 게임 결과 화면
+     4. 게임 결과
 ===================================== -->
 
 <section id="result" class="hidden">
@@ -614,9 +626,7 @@ button:disabled {
     <div class="emoji">🏆</div>
 
     <h1>
-
       게임 <span>종료!</span>
-
     </h1>
 
     <p id="winner"></p>
@@ -624,26 +634,7 @@ button:disabled {
   </div>
 
 
-  <div class="scores">
-
-    <div class="score">
-
-      💜 A팀
-
-      <strong id="fa">0</strong>
-
-    </div>
-
-
-    <div class="score">
-
-      💛 B팀
-
-      <strong id="fb">0</strong>
-
-    </div>
-
-  </div>
+  <div class="scores" id="finalScores"></div>
 
 
   <button class="primary" id="again">
@@ -659,9 +650,7 @@ button:disabled {
 
 
 
-<!-- =====================================
-     단어 파일 불러오기
-===================================== -->
+<!-- 단어 파일 -->
 
 <script src="./words.js"></script>
 
@@ -674,6 +663,30 @@ button:disabled {
 ===================================== */
 
 const $ = id => document.getElementById(id);
+
+
+const TEAM_NAMES = [
+  "A팀",
+  "B팀",
+  "C팀",
+  "D팀"
+];
+
+
+const TEAM_EMOJIS = [
+  "💜",
+  "💛",
+  "💚",
+  "🩵"
+];
+
+
+const TEAM_CLASSES = [
+  "team-a",
+  "team-b",
+  "team-c",
+  "team-d"
+];
 
 
 let allWords = [];
@@ -689,8 +702,12 @@ let roundNo = 0;
 
 let teamNo = 0;
 
+let teamCount = 2;
 
-let scores = [0, 0];
+let playerCount = 4;
+
+
+let scores = [];
 
 
 let time = 40;
@@ -700,7 +717,7 @@ let interval = null;
 let active = false;
 
 
-// 플레이어별 미리보기 상태
+// 플레이어별 미리보기
 
 let previewInterval = null;
 
@@ -721,12 +738,9 @@ function loadBank() {
 
   $("start").disabled = true;
 
+
   const source = window.TIMESUP_WORDS || {};
 
-
-  /*
-    words.js 안에 있는 모든 배열을 합친다.
-  */
 
   const collected = Object.values(source)
 
@@ -738,7 +752,8 @@ function loadBank() {
 
 
   /*
-    문자열만 사용하고 공백과 중복을 정리한다.
+    중복 단어 제거
+    앞뒤 공백 제거
   */
 
   allWords = [
@@ -799,7 +814,7 @@ function loadBank() {
 
     "전체 단어: " + allWords.length + "개\n\n" +
 
-    "원하는 단어 개수와 플레이 인원수를 선택해 주세요.";
+    "원하는 단어 개수, 플레이 인원수, 팀 개수를 선택해 주세요.";
 
 
   $("start").disabled = false;
@@ -812,7 +827,7 @@ function loadBank() {
 
 
 /* =====================================
-   3. 단어 순서 무작위 섞기
+   3. 배열 무작위 섞기
 ===================================== */
 
 function shuffle(array) {
@@ -873,7 +888,125 @@ function section(id) {
 
 
 /* =====================================
-   5. 라운드 표시
+   5. 팀 이름 가져오기
+===================================== */
+
+function getTeamName(index) {
+
+  return TEAM_NAMES[index];
+
+}
+
+
+/* =====================================
+   6. 팀 아이콘 가져오기
+===================================== */
+
+function getTeamEmoji(index) {
+
+  return TEAM_EMOJIS[index];
+
+}
+
+
+/* =====================================
+   7. 점수판 생성
+===================================== */
+
+function renderScoreBoards() {
+
+  const boards = [
+
+    $("scores"),
+
+    $("finalScores")
+
+  ];
+
+
+  boards.forEach(container => {
+
+    container.replaceChildren();
+
+
+    for (let i = 0; i < teamCount; i++) {
+
+      const card = document.createElement("div");
+
+      card.className =
+
+        "score " + TEAM_CLASSES[i];
+
+
+      const title = document.createElement("div");
+
+      title.textContent =
+
+        getTeamEmoji(i) + " " + getTeamName(i);
+
+
+      const score = document.createElement("strong");
+
+      score.id =
+
+        container.id === "scores"
+
+          ? "score-" + i
+
+          : "final-score-" + i;
+
+
+      score.textContent =
+
+        scores[i] ?? 0;
+
+
+      card.appendChild(title);
+
+      card.appendChild(score);
+
+
+      container.appendChild(card);
+
+    }
+
+  });
+
+}
+
+
+/* =====================================
+   8. 점수 업데이트
+===================================== */
+
+function updateScores() {
+
+  for (let i = 0; i < teamCount; i++) {
+
+    const scoreElement = $("score-" + i);
+
+    if (scoreElement) {
+
+      scoreElement.textContent = scores[i];
+
+    }
+
+
+    const finalElement = $("final-score-" + i);
+
+    if (finalElement) {
+
+      finalElement.textContent = scores[i];
+
+    }
+
+  }
+
+}
+
+
+/* =====================================
+   9. 라운드 표시
 ===================================== */
 
 function updateRound() {
@@ -902,37 +1035,26 @@ function updateRound() {
 
 
 /* =====================================
-   6. 점수 표시
-===================================== */
-
-function updateScores() {
-
-  $("a").textContent = scores[0];
-
-  $("b").textContent = scores[1];
-
-}
-
-
-/* =====================================
-   7. 팀 표시
+   10. 현재 팀 표시
 ===================================== */
 
 function updateTeam() {
 
   $("team").textContent =
 
-    teamNo === 0
+    getTeamEmoji(teamNo) +
 
-      ? "💜 A팀 차례"
+    " " +
 
-      : "💛 B팀 차례";
+    getTeamName(teamNo) +
+
+    " 차례";
 
 }
 
 
 /* =====================================
-   8. 남은 단어 표시
+   11. 남은 단어 표시
 ===================================== */
 
 function updateLeft() {
@@ -950,7 +1072,7 @@ function updateLeft() {
 
 
 /* =====================================
-   9. 게임 타이머 정지
+   12. 게임 타이머 정지
 ===================================== */
 
 function stopTimer() {
@@ -970,7 +1092,7 @@ function stopTimer() {
 
 
 /* =====================================
-   10. 미리보기 타이머 정지
+   13. 미리보기 타이머 정지
 ===================================== */
 
 function stopPreviewTimer() {
@@ -987,7 +1109,7 @@ function stopPreviewTimer() {
 
 
 /* =====================================
-   11. 새 게임 시작
+   14. 새 게임 시작
 ===================================== */
 
 function startGame() {
@@ -1001,14 +1123,30 @@ function startGame() {
   }
 
 
+  stopTimer();
+
+  stopPreviewTimer();
+
+
   const requested =
 
     Number($("count").value);
 
 
+  playerCount =
+
+    Number($("playerCount").value);
+
+
+  teamCount =
+
+    Number($("teamCount").value);
+
+
   /*
-    전체 단어를 무작위로 섞고
-    선택한 개수만큼 사용한다.
+    선택한 개수만큼 단어를 무작위로 선택한다.
+
+    이때 섞인 순서가 1라운드의 출제 순서가 된다.
   */
 
   deck = shuffle(allWords).slice(
@@ -1020,10 +1158,6 @@ function startGame() {
   );
 
 
-  /*
-    첫 번째 라운드의 순서를 저장한다.
-  */
-
   remaining = [...deck];
 
   passedWords = [];
@@ -1034,15 +1168,10 @@ function startGame() {
   teamNo = 0;
 
 
-  scores = [0, 0];
+  scores = Array(teamCount).fill(0);
 
 
   time = 40;
-
-
-  stopTimer();
-
-  stopPreviewTimer();
 
 
   updateScores();
@@ -1052,8 +1181,11 @@ function startGame() {
   updateTeam();
 
 
+  renderScoreBoards();
+
+
   /*
-    단어 미리보기를 먼저 시작한다.
+    게임 전에 플레이어별 미리보기 진행
   */
 
   startPreview();
@@ -1062,26 +1194,26 @@ function startGame() {
 
 
 /* =====================================
-   12. 단어를 플레이어별로 분배
+   15. 플레이어별 단어 분배
 ===================================== */
 
-function divideWords(words, playerCount) {
+function divideWords(words, count) {
 
   const groups = [];
 
 
-  for (let i = 0; i < playerCount; i++) {
+  for (let i = 0; i < count; i++) {
 
     const start = Math.floor(
 
-      i * words.length / playerCount
+      i * words.length / count
 
     );
 
 
     const end = Math.floor(
 
-      (i + 1) * words.length / playerCount
+      (i + 1) * words.length / count
 
     );
 
@@ -1101,25 +1233,13 @@ function divideWords(words, playerCount) {
 
 
 /* =====================================
-   13. 플레이어별 단어 미리보기 시작
+   16. 미리보기 시작
 ===================================== */
 
 function startPreview() {
 
   stopPreviewTimer();
 
-
-  const playerCount =
-
-    Number($("playerCount").value);
-
-
-  /*
-    게임에 사용할 단어를 플레이어 수에 맞게 분배한다.
-
-    예시:
-    40개 / 4명 = 각 10개
-  */
 
   previewGroups = divideWords(
 
@@ -1135,11 +1255,8 @@ function startPreview() {
   previewShowingWords = false;
 
 
-  /*
-    첫 번째 플레이어부터 시작한다.
-  */
-
   section("preview");
+
 
   showPreviewCover();
 
@@ -1147,7 +1264,7 @@ function startPreview() {
 
 
 /* =====================================
-   14. 플레이어 변경 화면
+   17. 플레이어 교체 화면
 ===================================== */
 
 function showPreviewCover() {
@@ -1177,13 +1294,13 @@ function showPreviewCover() {
 
     playerNumber +
 
-    "번 플레이어만 화면을 확인해 주세요. " +
+    "번 플레이어만 화면을 확인해 주세요.\n\n" +
 
     "다른 사람은 잠시 눈을 돌려 주세요! 🙈";
 
 
   /*
-    이전 플레이어의 단어를 완전히 제거한다.
+    이전 플레이어의 단어를 제거한다.
   */
 
   $("previewWords").replaceChildren();
@@ -1204,7 +1321,7 @@ function showPreviewCover() {
 
 
 /* =====================================
-   15. 현재 플레이어의 단어 표시
+   18. 현재 플레이어의 단어 표시
 ===================================== */
 
 function showPlayerWords() {
@@ -1250,10 +1367,6 @@ function showPlayerWords() {
   container.replaceChildren();
 
 
-  /*
-    해당 플레이어에게 배정된 단어만 보여준다.
-  */
-
   words.forEach((word, index) => {
 
     const item = document.createElement("div");
@@ -1275,16 +1388,9 @@ function showPlayerWords() {
   container.classList.remove("hidden");
 
 
-  const isLastPlayer =
-
-    previewPlayerIndex ===
-
-    previewGroups.length - 1;
-
-
   $("previewAction").textContent =
 
-    isLastPlayer
+    previewPlayerIndex === previewGroups.length - 1
 
       ? "🎉 미리보기 끝내고 게임 시작"
 
@@ -1292,7 +1398,7 @@ function showPlayerWords() {
 
 
   /*
-    플레이어마다 20초 동안 확인할 수 있다.
+    20초 카운트다운
   */
 
   previewInterval = setInterval(() => {
@@ -1319,7 +1425,7 @@ function showPlayerWords() {
 
 
 /* =====================================
-   16. 현재 플레이어의 미리보기 종료
+   19. 플레이어 미리보기 종료
 ===================================== */
 
 function finishPlayerPreview() {
@@ -1331,7 +1437,7 @@ function finishPlayerPreview() {
 
 
   /*
-    마지막 플레이어라면 게임을 시작한다.
+    마지막 플레이어가 끝나면 게임 화면으로 이동
   */
 
   if (
@@ -1350,16 +1456,11 @@ function finishPlayerPreview() {
 
 
   /*
-    다음 플레이어로 이동한다.
+    다음 플레이어로 이동
   */
 
   previewPlayerIndex++;
 
-
-  /*
-    기존 단어를 숨기고
-    다음 플레이어의 준비 화면을 보여준다.
-  */
 
   showPreviewCover();
 
@@ -1367,14 +1468,10 @@ function finishPlayerPreview() {
 
 
 /* =====================================
-   17. 미리보기 버튼
+   20. 미리보기 버튼
 ===================================== */
 
 function handlePreviewAction() {
-
-  /*
-    단어를 아직 확인하지 않았다면 표시한다.
-  */
 
   if (!previewShowingWords) {
 
@@ -1385,17 +1482,13 @@ function handlePreviewAction() {
   }
 
 
-  /*
-    단어를 확인했다면 다음 플레이어로 이동한다.
-  */
-
   finishPlayerPreview();
 
 }
 
 
 /* =====================================
-   18. 게임 화면으로 이동
+   21. 게임 화면 진입
 ===================================== */
 
 function enterGame() {
@@ -1406,13 +1499,16 @@ function enterGame() {
   section("game");
 
 
+  renderScoreBoards();
+
+
   prepareTurn();
 
 }
 
 
 /* =====================================
-   19. 턴 준비
+   22. 턴 준비
 ===================================== */
 
 function prepareTurn() {
@@ -1435,13 +1531,9 @@ function prepareTurn() {
   updateLeft();
 
 
-  /*
-    팀이 바뀌면 단어를 숨긴다.
-  */
-
   $("readyMessage").textContent =
 
-    (teamNo === 0 ? "A팀" : "B팀") +
+    getTeamName(teamNo) +
 
     " 준비됐나요?";
 
@@ -1497,7 +1589,7 @@ function prepareTurn() {
 
 
 /* =====================================
-   20. 다음 단어 준비
+   23. 다음 단어 준비
 ===================================== */
 
 function prepareNextWord() {
@@ -1515,7 +1607,7 @@ function prepareNextWord() {
 
   ) {
 
-    remaining = [...passedWords];
+    remaining = shuffle(passedWords);
 
     passedWords = [];
 
@@ -1523,7 +1615,7 @@ function prepareNextWord() {
 
 
   /*
-    모든 단어를 사용했다면 라운드 종료.
+    모든 단어를 사용했다면 라운드 종료
   */
 
   if (
@@ -1550,7 +1642,7 @@ function prepareNextWord() {
 
 
 /* =====================================
-   21. 현재 단어 표시
+   24. 현재 단어 표시
 ===================================== */
 
 function showCurrentWord() {
@@ -1587,7 +1679,7 @@ function showCurrentWord() {
 
 
 /* =====================================
-   22. 턴 시작
+   25. 턴 시작
 ===================================== */
 
 function beginTurn() {
@@ -1654,8 +1746,7 @@ function beginTurn() {
 
 
   /*
-    시작 버튼을 누른 순간부터
-    40초 카운트다운을 시작한다.
+    40초 카운트다운
   */
 
   interval = setInterval(() => {
@@ -1680,7 +1771,7 @@ function beginTurn() {
 
 
 /* =====================================
-   23. 정답 처리
+   26. 정답 처리
 ===================================== */
 
 function correctAnswer() {
@@ -1693,14 +1784,14 @@ function correctAnswer() {
 
 
   /*
-    정답을 맞힌 단어를 제거한다.
+    정답 단어 제거
   */
 
   remaining.shift();
 
 
   /*
-    현재 팀에 1점을 추가한다.
+    현재 팀에 점수 추가
   */
 
   scores[teamNo]++;
@@ -1710,7 +1801,7 @@ function correctAnswer() {
 
 
   /*
-    다음 단어를 표시한다.
+    다음 단어 표시
   */
 
   showCurrentWord();
@@ -1719,7 +1810,7 @@ function correctAnswer() {
 
 
 /* =====================================
-   24. 패스 처리
+   27. 패스 처리
 ===================================== */
 
 function passWord() {
@@ -1737,10 +1828,6 @@ function passWord() {
   }
 
 
-  /*
-    패스한 단어는 별도로 보관한다.
-  */
-
   const skipped = remaining.shift();
 
 
@@ -1748,7 +1835,7 @@ function passWord() {
 
 
   /*
-    다음 단어를 표시한다.
+    다음 단어 표시
   */
 
   showCurrentWord();
@@ -1757,7 +1844,28 @@ function passWord() {
 
 
 /* =====================================
-   25. 턴 종료
+   28. 다음 팀으로 이동
+===================================== */
+
+function nextTeam() {
+
+  /*
+    팀 개수에 맞춰 순환한다.
+
+    2팀: A → B → A
+    3팀: A → B → C → A
+    4팀: A → B → C → D → A
+  */
+
+  teamNo =
+
+    (teamNo + 1) % teamCount;
+
+}
+
+
+/* =====================================
+   29. 턴 종료
 ===================================== */
 
 function finishTurn() {
@@ -1773,8 +1881,8 @@ function finishTurn() {
 
 
   /*
-    마지막으로 보고 있던 단어는 넘긴다.
-    점수는 추가하지 않는다.
+    시간이 끝났을 때 보고 있던 문제는
+    정답 처리하지 않고 넘어간다.
   */
 
   if (remaining.length > 0) {
@@ -1785,7 +1893,7 @@ function finishTurn() {
 
 
   /*
-    모든 단어를 사용했다면 라운드 종료.
+    모든 단어를 사용했다면 라운드 종료
   */
 
   if (
@@ -1804,15 +1912,14 @@ function finishTurn() {
 
 
   /*
-    다음 팀으로 변경한다.
+    다음 팀으로 이동
   */
 
-  teamNo = teamNo === 0 ? 1 : 0;
+  nextTeam();
 
 
   /*
-    다음 팀이 시작 버튼을 누를 때까지
-    단어를 숨겨 놓는다.
+    다음 팀이 시작 버튼을 누를 때까지 대기
   */
 
   prepareTurn();
@@ -1821,7 +1928,7 @@ function finishTurn() {
 
 
 /* =====================================
-   26. 라운드 종료
+   30. 라운드 종료
 ===================================== */
 
 function finishRound() {
@@ -1830,7 +1937,7 @@ function finishRound() {
 
 
   /*
-    세 번째 라운드가 끝나면 게임 종료.
+    3라운드가 끝나면 최종 결과
   */
 
   if (roundNo >= 2) {
@@ -1843,30 +1950,33 @@ function finishRound() {
 
 
   /*
-    다음 라운드로 이동한다.
+    다음 라운드로 이동
   */
 
   roundNo++;
 
 
   /*
-    다음 라운드에서 단어 순서를 다시 섞는다.
+    매 라운드마다 전체 문제 순서를 새로 섞는다.
+
+    패스한 문제도 포함해 새 순서로 출제한다.
   */
 
   remaining = shuffle(deck);
-
 
   passedWords = [];
 
 
   /*
-    새로운 라운드는 A팀부터 시작한다.
+    새로운 라운드는 A팀부터 시작
   */
 
   teamNo = 0;
 
 
   updateRound();
+
+  updateScores();
 
 
   prepareTurn();
@@ -1875,36 +1985,59 @@ function finishRound() {
 
 
 /* =====================================
-   27. 게임 결과
+   31. 최종 결과
 ===================================== */
 
 function showResult() {
 
   stopTimer();
 
-
-  $("fa").textContent = scores[0];
-
-  $("fb").textContent = scores[1];
+  stopPreviewTimer();
 
 
-  if (scores[0] > scores[1]) {
+  updateScores();
+
+
+  const highestScore = Math.max(...scores);
+
+
+  const winners = scores
+
+    .map((score, index) => ({
+
+      score,
+
+      index
+
+    }))
+
+    .filter(team =>
+
+      team.score === highestScore
+
+    );
+
+
+  if (winners.length > 1) {
 
     $("winner").textContent =
 
-      "💜 A팀 승리! 앙!";
-
-  } else if (scores[1] > scores[0]) {
-
-    $("winner").textContent =
-
-      "💛 B팀 승리! 앙!";
+      "🤝 무승부! 앙! 🎉";
 
   } else {
 
+    const winnerIndex = winners[0].index;
+
+
     $("winner").textContent =
 
-      "🤝 무승부! 앙앙!";
+      getTeamEmoji(winnerIndex) +
+
+      " " +
+
+      getTeamName(winnerIndex) +
+
+      " 승리! 앙! 🎉";
 
   }
 
@@ -1915,7 +2048,7 @@ function showResult() {
 
 
 /* =====================================
-   28. 버튼 연결
+   32. 버튼 연결
 ===================================== */
 
 $("start").onclick = startGame;
@@ -1947,7 +2080,7 @@ $("end").onclick =
 
 
 /*
-  다시 플레이하면 설정 화면으로 돌아간다.
+  다시 플레이하기
 */
 
 $("again").onclick = () => {
@@ -1955,6 +2088,13 @@ $("again").onclick = () => {
   stopTimer();
 
   stopPreviewTimer();
+
+
+  deck = [];
+
+  remaining = [];
+
+  passedWords = [];
 
 
   previewGroups = [];
@@ -1970,7 +2110,7 @@ $("again").onclick = () => {
 
 
 /* =====================================
-   29. 단어 목록 불러오기
+   33. 초기화
 ===================================== */
 
 loadBank();
