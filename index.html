@@ -143,6 +143,8 @@ button:disabled {
 #timer {
   font-size: 28px;
   font-weight: 900;
+  min-width: 65px;
+  text-align: right;
 }
 
 .card {
@@ -183,15 +185,30 @@ button:disabled {
   margin-top: 12px;
 }
 
+/*
+  정답과 패스 버튼
+*/
+
 .actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  margin-top: 15px;
+}
+
+/*
+  1라운드는 정답 버튼만 표시
+*/
+
+.actions.single {
+  grid-template-columns: 1fr;
 }
 
 .actions button {
-  padding: 18px 5px;
+  min-height: 58px;
+  padding: 16px 5px;
   border-radius: 14px;
+  font-size: 17px;
 }
 
 .yes {
@@ -243,6 +260,8 @@ button:disabled {
   font-size: 12px;
   text-align: center;
 }
+
+/* 플레이어별 단어 미리보기 */
 
 .preview-words {
   display: grid;
@@ -301,9 +320,14 @@ button:disabled {
     font-size: 27px;
   }
 
+  .actions button {
+    font-size: 15px;
+  }
+
 }
 
 </style>
+
 </head>
 
 <body>
@@ -312,7 +336,10 @@ button:disabled {
 
 <header>🎉 TIME'S UP PARTY</header>
 
-<!-- 1. 게임 설정 화면 -->
+
+<!-- =====================================
+     1. 게임 설정 화면
+===================================== -->
 
 <section id="setup">
 
@@ -331,6 +358,7 @@ button:disabled {
 
   </div>
 
+
   <div class="box">
 
     <label for="count">🃏 출제할 단어 개수</label>
@@ -340,6 +368,7 @@ button:disabled {
       <option value="40" selected>40개</option>
       <option value="60">60개</option>
     </select>
+
 
     <label for="playerCount">👥 플레이 인원수</label>
 
@@ -359,6 +388,7 @@ button:disabled {
       <option value="16">16명</option>
     </select>
 
+
     <label for="teamCount">🏆 팀 개수</label>
 
     <select id="teamCount">
@@ -367,7 +397,9 @@ button:disabled {
       <option value="4">4팀</option>
     </select>
 
+
     <div class="status" style="margin-top:20px">
+
       🎲 모든 카테고리에서 단어가 무작위로 출제돼!
 
       👀 게임 시작 전에는 각자 배정된 단어만 미리 볼 수 있어.
@@ -375,15 +407,20 @@ button:disabled {
       🧠 한 사람씩 20초 동안 단어를 확인해 봐!
 
       🔀 미리보기가 끝나면 전체 단어를 다시 섞어서 출제해!
+
     </div>
+
 
     <label>⏱️ 턴 제한 시간</label>
 
     <div class="status">
+
       40초 고정
 
-      팀이 바뀌면 시작 버튼을 눌러야 타이머가 작동해!
+      시간이 끝나면 현재 문제가 맨 마지막 순서로 이동하고 자동으로 다음 팀의 차례가 돼!
+
     </div>
+
 
     <label>📚 단어 목록</label>
 
@@ -391,11 +428,13 @@ button:disabled {
       단어 목록을 확인하고 있어요...
     </div>
 
+
     <button class="primary" id="start" disabled>
       단어 목록 확인 중...
     </button>
 
   </div>
+
 
   <p class="note">
     ※ 단어는 words.js 파일에서 불러옵니다.
@@ -404,7 +443,10 @@ button:disabled {
 </section>
 
 
-<!-- 2. 플레이어별 단어 미리보기 화면 -->
+
+<!-- =====================================
+     2. 플레이어별 단어 미리보기 화면
+===================================== -->
 
 <section id="preview" class="hidden">
 
@@ -423,6 +465,7 @@ button:disabled {
 
   </div>
 
+
   <div class="box">
 
     <div class="top">
@@ -437,17 +480,21 @@ button:disabled {
 
     </div>
 
+
     <div id="previewMessage" class="status">
       본인 차례가 되면 단어를 확인해 주세요!
     </div>
 
+
     <div id="previewWords" class="preview-words hidden"></div>
+
 
     <button class="primary" id="previewAction">
       👀 내 단어 확인하기
     </button>
 
   </div>
+
 
   <p class="note">
     🙈 다음 사람에게 넘기기 전에 화면을 가려 주세요!
@@ -456,7 +503,10 @@ button:disabled {
 </section>
 
 
-<!-- 3. 게임 화면 -->
+
+<!-- =====================================
+     3. 게임 화면
+===================================== -->
 
 <section id="game" class="hidden">
 
@@ -472,6 +522,7 @@ button:disabled {
 
   </div>
 
+
   <div class="box">
 
     <div class="top">
@@ -486,11 +537,26 @@ button:disabled {
 
     </div>
 
+
     <p id="roundRule">
       🗣️ 말로 자유롭게 설명하기
     </p>
 
   </div>
+
+
+  <!--
+    시작 버튼을 문제 카드 위로 이동했어.
+
+    정답 버튼과 시작 버튼의 위치가 달라서
+    시간 초과 후 실수로 다음 팀의 시작 버튼을
+    누르는 일을 줄일 수 있어.
+  -->
+
+  <button class="primary" id="beginTurn">
+    🚀 시작하기
+  </button>
+
 
   <div class="card">
 
@@ -498,11 +564,14 @@ button:disabled {
       ✨ TIME'S UP ✨
     </div>
 
+
     <div id="readyMessage">
       A팀 준비됐나요?
     </div>
 
+
     <div id="word" class="hidden"></div>
+
 
     <div id="hint">
       시작 버튼을 눌러 주세요!
@@ -510,9 +579,8 @@ button:disabled {
 
   </div>
 
-  <button class="primary" id="beginTurn">
-    🚀 시작하기
-  </button>
+
+  <!-- 정답과 패스 버튼은 문제 카드 아래에 배치 -->
 
   <div class="actions hidden" id="actions">
 
@@ -526,20 +594,23 @@ button:disabled {
 
   </div>
 
+
+  <!-- 팀 개수에 따라 점수판 자동 생성 -->
+
   <div class="scores" id="scores"></div>
 
-  <button class="primary hidden" id="end">
-    턴 종료하기
-  </button>
 
-  <p class="note">
+  <p class="note" id="gameNote">
     정답 버튼을 눌러야 점수가 올라가!
   </p>
 
 </section>
 
 
-<!-- 4. 게임 결과 화면 -->
+
+<!-- =====================================
+     4. 게임 결과 화면
+===================================== -->
 
 <section id="result" class="hidden">
 
@@ -555,7 +626,9 @@ button:disabled {
 
   </div>
 
+
   <div class="scores" id="finalScores"></div>
+
 
   <button class="primary" id="again">
     다시 플레이하기 🎉
@@ -563,12 +636,18 @@ button:disabled {
 
 </section>
 
+
 </main>
 
 
-<!-- 단어 파일 불러오기 -->
+
+<!-- =====================================
+     단어 파일 불러오기
+===================================== -->
 
 <script src="./words.js"></script>
+
+
 
 <script>
 
@@ -578,55 +657,63 @@ button:disabled {
 
 const $ = id => document.getElementById(id);
 
+
 let allWords = [];
+
 let deck = [];
 
 /*
-  remaining은 아직 정답 처리되지 않은 단어들의
-  실제 출제 순서를 유지한다.
+  remaining은 아직 정답 처리되지 않은
+  모든 단어의 출제 순서를 관리한다.
 
-  패스하거나 시간 초과된 단어는
-  배열의 맨 뒤로 이동한다.
-
-  따라서 다음 팀은 마지막으로 보던 단어의
-  다음 단어부터 시작할 수 있다.
+  정답: 배열에서 제거
+  패스: 배열 맨 뒤로 이동
+  시간 초과: 현재 단어를 맨 뒤로 이동
 */
 
 let remaining = [];
 
+
 /*
-  현재 턴에서 패스하거나 시간 초과된 단어를 기록한다.
+  현재 팀이 패스한 단어를 기록한다.
 
-  해당 단어들이 전부 남아 있고
-  더 이상 다른 단어가 없다면
-  다음 팀으로 넘어간다.
-
-  팀이 바뀌면 기록을 초기화하므로
-  다음 팀은 그 단어를 정상적으로 풀 수 있다.
+  이 단어가 다시 현재 순서로 돌아오면
+  자동으로 다음 팀에게 차례를 넘긴다.
 */
 
-let deferredWords = new Set();
+let passedThisTurn = new Set();
+
 
 let roundNo = 0;
+
 let teamNo = 0;
 
 let teamCount = 2;
+
 let playerCount = 4;
+
 
 let scores = [];
 
 let time = 40;
+
 let interval = null;
+
 let active = false;
+
 
 // 플레이어별 미리보기 상태
 
 let previewInterval = null;
+
 let previewTime = 20;
 
 let previewGroups = [];
+
 let previewPlayerIndex = 0;
+
 let previewShowingWords = false;
+
 
 // 팀 이름 및 색상
 
@@ -665,11 +752,17 @@ function loadBank() {
 
   const source = window.TIMESUP_WORDS || {};
 
+
+  /*
+    words.js 안에 있는 모든 배열을 합친다.
+  */
+
   const collected = Object.values(source)
 
     .flatMap(list =>
       Array.isArray(list) ? list : []
     );
+
 
   /*
     문자열만 사용하고 공백과 중복을 정리한다.
@@ -698,25 +791,32 @@ function loadBank() {
 
   ];
 
+
   if (allWords.length === 0) {
 
     $("loadStatus").textContent =
+
       "단어를 불러오지 못했어요.\n\n" +
       "words.js 파일의 경로와 문법을 확인해 주세요.";
+
 
     $("start").disabled = true;
 
     $("start").textContent =
       "단어 목록 확인 필요";
 
+
     return;
 
   }
 
+
   $("loadStatus").textContent =
+
     "단어 목록 준비 완료! 🎉\n\n" +
     "전체 단어: " + allWords.length + "개\n\n" +
     "원하는 단어 개수, 플레이 인원수, 팀 개수를 선택해 주세요.";
+
 
   $("start").disabled = false;
 
@@ -734,16 +834,19 @@ function shuffle(array) {
 
   const result = [...array];
 
+
   for (let i = result.length - 1; i > 0; i--) {
 
     const j = Math.floor(
       Math.random() * (i + 1)
     );
 
+
     [result[i], result[j]] =
       [result[j], result[i]];
 
   }
+
 
   return result;
 
@@ -782,6 +885,7 @@ function updateRound() {
   $("round").textContent =
     (roundNo + 1) + "라운드 / 3라운드";
 
+
   const rules = [
 
     "🗣️ 말로 자유롭게 설명하기",
@@ -791,6 +895,7 @@ function updateRound() {
     "🎭 말없이 몸짓으로 표현하기"
 
   ];
+
 
   $("roundRule").textContent =
     rules[roundNo];
@@ -817,9 +922,11 @@ function updateTeam() {
 
   const currentTeam = getTeamInfo(teamNo);
 
+
   $("team").textContent =
     currentTeam.emoji + " " +
     currentTeam.name + " 차례";
+
 
   $("readyMessage").textContent =
     currentTeam.name + " 준비됐나요?";
@@ -828,39 +935,87 @@ function updateTeam() {
 
 
 /* =====================================
-   8. 점수판 생성
+   8. 정답/패스 버튼 설정
+===================================== */
+
+function updateActionButtons() {
+
+  /*
+    1라운드에는 패스할 수 없다.
+    따라서 패스 버튼을 숨기고
+    정답 버튼을 전체 너비로 표시한다.
+  */
+
+  if (roundNo === 0) {
+
+    $("pass").classList.add("hidden");
+
+    $("actions").classList.add("single");
+
+    $("gameNote").textContent =
+      "1라운드에서는 패스할 수 없어! 정답만 눌러 줘.";
+
+  } else {
+
+    $("pass").classList.remove("hidden");
+
+    $("actions").classList.remove("single");
+
+    $("gameNote").textContent =
+      "정답이면 정답! 패스하면 해당 단어는 맨 뒤로 이동해.";
+
+  }
+
+}
+
+
+/* =====================================
+   9. 점수판 생성
 ===================================== */
 
 function renderScores(containerId, finalMode = false) {
 
   const container = $(containerId);
 
+
   container.replaceChildren();
+
 
   container.classList.remove(
     "three",
     "four"
   );
 
+
   if (teamCount === 3) {
+
     container.classList.add("three");
+
   }
 
+
   if (teamCount === 4) {
+
     container.classList.add("four");
+
   }
+
 
   for (let i = 0; i < teamCount; i++) {
 
     const info = getTeamInfo(i);
 
+
     const card = document.createElement("div");
+
     card.className = "score";
+
 
     const label = document.createElement("div");
 
     label.textContent =
       info.emoji + " " + info.name;
+
 
     const score = document.createElement("strong");
 
@@ -868,10 +1023,14 @@ function renderScores(containerId, finalMode = false) {
       ? "final-score-" + i
       : "score-" + i;
 
+
     score.textContent = scores[i] ?? 0;
 
+
     card.appendChild(label);
+
     card.appendChild(score);
+
 
     container.appendChild(card);
 
@@ -881,7 +1040,7 @@ function renderScores(containerId, finalMode = false) {
 
 
 /* =====================================
-   9. 점수 업데이트
+   10. 점수 업데이트
 ===================================== */
 
 function updateScores() {
@@ -890,8 +1049,11 @@ function updateScores() {
 
     const score = $("score-" + i);
 
+
     if (score) {
+
       score.textContent = scores[i];
+
     }
 
   }
@@ -900,7 +1062,7 @@ function updateScores() {
 
 
 /* =====================================
-   10. 남은 단어 표시
+   11. 남은 단어 표시
 ===================================== */
 
 function updateLeft() {
@@ -912,7 +1074,7 @@ function updateLeft() {
 
 
 /* =====================================
-   11. 게임 타이머 정지
+   12. 게임 타이머 정지
 ===================================== */
 
 function stopTimer() {
@@ -925,13 +1087,14 @@ function stopTimer() {
 
   }
 
+
   active = false;
 
 }
 
 
 /* =====================================
-   12. 미리보기 타이머 정지
+   13. 미리보기 타이머 정지
 ===================================== */
 
 function stopPreviewTimer() {
@@ -948,7 +1111,7 @@ function stopPreviewTimer() {
 
 
 /* =====================================
-   13. 새 게임 시작
+   14. 새 게임 시작
 ===================================== */
 
 function startGame() {
@@ -961,14 +1124,22 @@ function startGame() {
 
   }
 
+
+  /*
+    설정값 읽기
+  */
+
   const requested =
     Number($("count").value);
+
 
   playerCount =
     Number($("playerCount").value);
 
+
   teamCount =
     Number($("teamCount").value);
+
 
   /*
     전체 단어를 무작위로 섞고
@@ -980,25 +1151,51 @@ function startGame() {
     Math.min(requested, allWords.length)
   );
 
+
+  /*
+    미리보기용 단어 목록을 준비한다.
+  */
+
   remaining = [...deck];
 
-  deferredWords.clear();
+  passedThisTurn.clear();
+
+
+  /*
+    게임 상태 초기화
+  */
 
   roundNo = 0;
+
   teamNo = 0;
 
   scores = Array(teamCount).fill(0);
 
   time = 40;
 
+
   stopTimer();
+
   stopPreviewTimer();
 
+
   updateScores();
+
   updateRound();
+
   updateTeam();
 
+
+  /*
+    점수판 생성
+  */
+
   renderScores("scores");
+
+
+  /*
+    플레이어별 미리보기부터 시작한다.
+  */
 
   startPreview();
 
@@ -1006,12 +1203,13 @@ function startGame() {
 
 
 /* =====================================
-   14. 단어를 플레이어별로 분배
+   15. 단어를 플레이어별로 분배
 ===================================== */
 
 function divideWords(words, numberOfPlayers) {
 
   const groups = [];
+
 
   for (let i = 0; i < numberOfPlayers; i++) {
 
@@ -1019,9 +1217,11 @@ function divideWords(words, numberOfPlayers) {
       i * words.length / numberOfPlayers
     );
 
+
     const end = Math.floor(
       (i + 1) * words.length / numberOfPlayers
     );
+
 
     groups.push(
       words.slice(start, end)
@@ -1029,28 +1229,34 @@ function divideWords(words, numberOfPlayers) {
 
   }
 
+
   return groups;
 
 }
 
 
 /* =====================================
-   15. 플레이어별 단어 미리보기 시작
+   16. 플레이어별 단어 미리보기 시작
 ===================================== */
 
 function startPreview() {
 
   stopPreviewTimer();
 
+
   previewGroups = divideWords(
     deck,
     playerCount
   );
 
+
   previewPlayerIndex = 0;
+
   previewShowingWords = false;
 
+
   section("preview");
+
 
   showPreviewCover();
 
@@ -1058,32 +1264,44 @@ function startPreview() {
 
 
 /* =====================================
-   16. 플레이어 변경 화면
+   17. 플레이어 변경 화면
 ===================================== */
 
 function showPreviewCover() {
 
   stopPreviewTimer();
 
+
   previewShowingWords = false;
+
 
   const playerNumber =
     previewPlayerIndex + 1;
 
+
   $("previewCount").textContent =
     playerNumber + "번 플레이어 차례";
+
 
   $("previewTimer").textContent =
     "준비";
 
+
   $("previewMessage").textContent =
+
     playerNumber +
     "번 플레이어만 화면을 확인해 주세요. " +
     "다른 사람은 잠시 눈을 돌려 주세요! 🙈";
 
+
+  /*
+    이전 플레이어의 단어를 완전히 제거한다.
+  */
+
   $("previewWords").replaceChildren();
 
   $("previewWords").classList.add("hidden");
+
 
   $("previewAction").textContent =
     "👀 내 단어 확인하기";
@@ -1092,36 +1310,50 @@ function showPreviewCover() {
 
 
 /* =====================================
-   17. 현재 플레이어의 단어 표시
+   18. 현재 플레이어의 단어 표시
 ===================================== */
 
 function showPlayerWords() {
 
   stopPreviewTimer();
 
+
   previewShowingWords = true;
 
   previewTime = 20;
 
+
   const words =
     previewGroups[previewPlayerIndex];
+
 
   const playerNumber =
     previewPlayerIndex + 1;
 
+
   $("previewCount").textContent =
     playerNumber + "번 플레이어의 단어";
+
 
   $("previewTimer").textContent =
     previewTime + "초";
 
+
   $("previewMessage").textContent =
+
     "배정된 단어 " + words.length +
     "개를 기억해 보세요! 🧠";
 
+
   const container = $("previewWords");
 
+
   container.replaceChildren();
+
+
+  /*
+    해당 플레이어에게 배정된 단어만 보여준다.
+  */
 
   words.forEach((word, index) => {
 
@@ -1136,22 +1368,33 @@ function showPlayerWords() {
 
   });
 
+
   container.classList.remove("hidden");
+
 
   const isLastPlayer =
     previewPlayerIndex === previewGroups.length - 1;
 
+
   $("previewAction").textContent =
+
     isLastPlayer
       ? "🎉 미리보기 끝내고 게임 시작"
       : "🙈 다 봤어요! 다음 사람에게 넘기기";
+
+
+  /*
+    플레이어마다 20초 동안 확인할 수 있다.
+  */
 
   previewInterval = setInterval(() => {
 
     previewTime--;
 
+
     $("previewTimer").textContent =
       previewTime + "초";
+
 
     if (previewTime <= 0) {
 
@@ -1167,18 +1410,23 @@ function showPlayerWords() {
 
 
 /* =====================================
-   18. 현재 플레이어의 미리보기 종료
+   19. 현재 플레이어의 미리보기 종료
 ===================================== */
 
 function finishPlayerPreview() {
 
   stopPreviewTimer();
 
+
   previewShowingWords = false;
 
+
+  /*
+    마지막 플레이어라면 게임을 시작한다.
+  */
+
   if (
-    previewPlayerIndex >=
-    previewGroups.length - 1
+    previewPlayerIndex >= previewGroups.length - 1
   ) {
 
     enterGame();
@@ -1187,7 +1435,13 @@ function finishPlayerPreview() {
 
   }
 
+
+  /*
+    다음 플레이어로 이동한다.
+  */
+
   previewPlayerIndex++;
+
 
   showPreviewCover();
 
@@ -1195,7 +1449,7 @@ function finishPlayerPreview() {
 
 
 /* =====================================
-   19. 미리보기 버튼
+   20. 미리보기 버튼
 ===================================== */
 
 function handlePreviewAction() {
@@ -1208,34 +1462,44 @@ function handlePreviewAction() {
 
   }
 
+
   finishPlayerPreview();
 
 }
 
 
 /* =====================================
-   20. 게임 화면으로 이동
+   21. 게임 화면으로 이동
 ===================================== */
 
 function enterGame() {
 
   stopPreviewTimer();
 
+
   /*
-    미리보기가 끝나면 전체 단어를 다시 섞는다.
+    미리보기가 끝나면 단어 순서를 다시 섞는다.
   */
 
   remaining = shuffle(deck);
 
-  deferredWords.clear();
+
+  passedThisTurn.clear();
+
 
   section("game");
+
 
   teamNo = 0;
 
   updateTeam();
+
   updateRound();
+
   updateScores();
+
+  updateActionButtons();
+
 
   prepareTurn();
 
@@ -1243,55 +1507,84 @@ function enterGame() {
 
 
 /* =====================================
-   21. 턴 준비
+   22. 턴 준비
 ===================================== */
 
 function prepareTurn() {
 
   stopTimer();
 
+
   time = 40;
 
-  $("timer").textContent =
-    "40초";
+
+  $("timer").textContent = "40초";
+
 
   updateTeam();
+
   updateRound();
+
   updateLeft();
+
+  updateActionButtons();
+
+
+  /*
+    새 팀의 차례가 되면
+    해당 팀의 패스 기록을 초기화한다.
+  */
+
+  passedThisTurn.clear();
+
+
+  /*
+    시작 전에는 문제를 숨긴다.
+  */
 
   $("readyMessage").textContent =
     getTeamInfo(teamNo).name + " 준비됐나요?";
 
+
   $("readyMessage").classList.remove("hidden");
+
 
   $("word").textContent = "";
 
   $("word").classList.add("hidden");
 
+
   $("hint").textContent =
     "시작 버튼을 눌러 주세요!";
+
+
+  /*
+    시작하기 버튼은 문제 카드 위에 표시한다.
+  */
 
   $("beginTurn").textContent =
     "🚀 시작하기";
 
   $("beginTurn").classList.remove("hidden");
 
-  $("actions").classList.add("hidden");
 
-  $("end").classList.add("hidden");
+  /*
+    정답/패스 버튼은 숨긴다.
+  */
+
+  $("actions").classList.add("hidden");
 
 }
 
 
 /* =====================================
-   22. 다음 단어 준비
+   23. 다음 단어 확인
 ===================================== */
 
 function prepareNextWord() {
 
   /*
-    남은 단어가 하나도 없다면
-    현재 라운드의 모든 단어를 정답 처리한 것이다.
+    모든 단어가 정답 처리됐다면 라운드 종료.
   */
 
   if (remaining.length === 0) {
@@ -1302,27 +1595,31 @@ function prepareNextWord() {
 
   }
 
+
   /*
-    남은 단어가 전부 이번 턴에 패스하거나
-    시간 초과된 단어라면 다음 팀으로 넘어간다.
+    현재 팀이 패스했던 문제가 다시 돌아왔다면
+    해당 문제를 소비하지 않고 다음 팀에게 넘긴다.
 
-    중요:
-    이때 단어를 제거하지 않는다.
+    예시:
+    A팀이 사과를 패스한다.
+    사과는 맨 뒤로 이동한다.
+    A팀이 나머지 문제를 모두 맞힌다.
+    사과가 다시 맨 앞에 오면 자동으로 B팀 차례가 된다.
 
-    현재 배열의 맨 앞에 있는 단어부터
-    다음 팀이 이어서 풀게 된다.
+    따라서 B팀은 사과부터 이어서 풀 수 있다.
   */
 
-  const allWordsDeferred =
-    remaining.every(word => deferredWords.has(word));
+  const nextWord = remaining[0];
 
-  if (allWordsDeferred) {
 
-    finishTurn();
+  if (passedThisTurn.has(nextWord)) {
+
+    finishTurnBecausePassedWordReturned();
 
     return false;
 
   }
+
 
   updateLeft();
 
@@ -1332,10 +1629,17 @@ function prepareNextWord() {
 
 
 /* =====================================
-   23. 현재 단어 표시
+   24. 현재 단어 표시
 ===================================== */
 
 function showCurrentWord() {
+
+  if (!active) {
+
+    return;
+
+  }
+
 
   if (!prepareNextWord()) {
 
@@ -1343,16 +1647,16 @@ function showCurrentWord() {
 
   }
 
-  /*
-    remaining[0]이 현재 출제할 단어다.
-  */
 
   $("word").textContent =
     remaining[0];
 
+
   $("word").classList.remove("hidden");
 
+
   $("readyMessage").classList.add("hidden");
+
 
   updateLeft();
 
@@ -1360,38 +1664,67 @@ function showCurrentWord() {
 
 
 /* =====================================
-   24. 턴 시작
+   25. 턴 시작
 ===================================== */
 
 function beginTurn() {
 
   if (active) {
+
     return;
+
   }
 
-  if (!prepareNextWord()) {
+
+  if (remaining.length === 0) {
+
+    finishRound();
+
     return;
+
   }
+
 
   active = true;
 
   time = 40;
 
-  $("timer").textContent =
-    "40초";
+
+  $("timer").textContent = "40초";
+
 
   $("readyMessage").classList.add("hidden");
 
+
+  /*
+    시작 버튼은 숨기고,
+    문제 카드 아래에 정답/패스 버튼을 표시한다.
+  */
+
   $("beginTurn").classList.add("hidden");
+
 
   $("actions").classList.remove("hidden");
 
-  $("end").classList.remove("hidden");
 
   $("hint").textContent =
-    "정답이면 정답 버튼을 눌러 줘!";
+    "정답이면 정답! 패스하면 단어가 맨 뒤로 이동해.";
+
 
   showCurrentWord();
+
+
+  /*
+    현재 단어가 패스 기록과 겹쳐
+    자동으로 턴이 종료됐다면 타이머를 시작하지 않는다.
+  */
+
+  if (!active) {
+
+    return;
+
+  }
+
 
   /*
     시작 버튼을 누른 순간부터
@@ -1402,18 +1735,14 @@ function beginTurn() {
 
     time--;
 
+
     $("timer").textContent =
       time + "초";
 
+
     if (time <= 0) {
 
-      /*
-        시간 초과:
-        현재 단어를 맨 뒤로 이동하고
-        다음 팀으로 넘긴다.
-      */
-
-      finishTurn(true);
+      finishTurnByTimeout();
 
     }
 
@@ -1423,22 +1752,27 @@ function beginTurn() {
 
 
 /* =====================================
-   25. 정답 처리
+   26. 정답 처리
 ===================================== */
 
 function correctAnswer() {
 
-  if (!active || remaining.length === 0) {
+  if (
+    !active ||
+    remaining.length === 0
+  ) {
+
     return;
+
   }
 
+
   /*
-    정답을 맞힌 단어는 배열에서 제거한다.
+    현재 단어를 정답 처리하고 제거한다.
   */
 
-  const solvedWord = remaining.shift();
+  remaining.shift();
 
-  deferredWords.delete(solvedWord);
 
   /*
     현재 팀에 1점을 추가한다.
@@ -1446,10 +1780,15 @@ function correctAnswer() {
 
   scores[teamNo]++;
 
+
   updateScores();
+
 
   /*
     다음 단어를 표시한다.
+
+    다음 단어가 현재 팀이 패스한 단어라면
+    자동으로 다음 팀으로 넘어간다.
   */
 
   showCurrentWord();
@@ -1458,48 +1797,58 @@ function correctAnswer() {
 
 
 /* =====================================
-   26. 패스 처리
+   27. 패스 처리
 ===================================== */
 
 function passWord() {
 
-  if (!active || remaining.length === 0) {
+  /*
+    1라운드에는 패스할 수 없다.
+  */
+
+  if (roundNo === 0) {
+
     return;
+
   }
 
+
+  if (
+    !active ||
+    remaining.length === 0
+  ) {
+
+    return;
+
+  }
+
+
   /*
-    현재 단어를 배열 맨 앞에서 꺼낸다.
+    현재 문제를 배열 맨 앞에서 꺼낸다.
   */
 
-  const skippedWord = remaining.shift();
+  const skipped = remaining.shift();
+
 
   /*
-    꺼낸 단어를 배열의 맨 마지막에 넣는다.
-
-    예:
-    사과 → 바나나 → 포도 → 수박 → 딸기
-
-    사과 패스 후:
-
-    바나나 → 포도 → 수박 → 딸기 → 사과
+    문제를 맨 마지막 순서로 보낸다.
   */
 
-  remaining.push(skippedWord);
+  remaining.push(skipped);
+
 
   /*
-    현재 턴에서 패스한 단어로 기록한다.
+    현재 팀이 패스한 문제를 기록한다.
 
-    다른 단어를 모두 처리하면
-    이 단어가 다시 나올 차례에 다음 팀으로 넘어간다.
+    이 문제가 다시 맨 앞으로 돌아오면
+    자동으로 다음 팀의 차례가 된다.
   */
 
-  deferredWords.add(skippedWord);
+  passedThisTurn.add(skipped);
+
 
   /*
-    다음 단어를 표시한다.
-
-    모든 남은 단어가 패스된 상태라면
-    prepareNextWord()에서 자동으로 다음 팀으로 넘어간다.
+    다음 문제를 표시한다.
   */
 
   showCurrentWord();
@@ -1508,79 +1857,30 @@ function passWord() {
 
 
 /* =====================================
-   27. 턴 종료
+   28. 다음 팀으로 이동
 ===================================== */
 
-/*
-  rotateCurrent가 true라면
-  현재 보고 있던 단어를 맨 마지막으로 옮긴다.
-
-  시간 초과나 직접 턴 종료 버튼을 누르면
-  현재 단어를 맨 뒤로 보내고 다음 팀이 이어서 진행한다.
-
-  패스한 단어는 passWord()에서 이미 이동했으므로
-  여기서 다시 이동시키지 않는다.
-*/
-
-function finishTurn(rotateCurrent = false) {
-
-  if (!active) {
-    return;
-  }
-
-  /*
-    시간 초과 또는 직접 턴 종료 시
-    현재 단어를 맨 마지막으로 이동한다.
-  */
-
-  if (rotateCurrent && remaining.length > 0) {
-
-    const currentWord = remaining.shift();
-
-    remaining.push(currentWord);
-
-  }
+function advanceTeam() {
 
   stopTimer();
 
-  /*
-    이전 팀에서 패스하거나 시간 초과된 단어의 기록을 초기화한다.
-
-    단어 자체는 remaining에 그대로 남아 있으므로
-    다음 팀이 해당 문제를 풀 수 있다.
-  */
-
-  deferredWords.clear();
-
-  /*
-    남은 단어가 없다면 라운드를 종료한다.
-  */
-
-  if (remaining.length === 0) {
-
-    finishRound();
-
-    return;
-
-  }
 
   /*
     다음 팀으로 이동한다.
 
     2팀: A → B → A
-
     3팀: A → B → C → A
-
     4팀: A → B → C → D → A
   */
 
   teamNo = (teamNo + 1) % teamCount;
 
-  /*
-    다음 팀은 현재 배열의 첫 번째 단어부터 시작한다.
 
-    시간 초과된 단어는 맨 마지막에 있으므로
-    그다음 순서의 단어부터 출제된다.
+  /*
+    다음 팀은 현재 큐의 첫 번째 단어부터 시작한다.
+
+    직전 팀이 보던 문제는 이미 맨 뒤로 이동했으므로
+    다음 팀은 그 다음 문제를 보게 된다.
   */
 
   prepareTurn();
@@ -1589,12 +1889,97 @@ function finishTurn(rotateCurrent = false) {
 
 
 /* =====================================
-   28. 라운드 종료
+   29. 패스했던 문제가 다시 나온 경우
+===================================== */
+
+function finishTurnBecausePassedWordReturned() {
+
+  if (!active) {
+
+    return;
+
+  }
+
+
+  stopTimer();
+
+
+  /*
+    중요:
+    현재 문제를 제거하거나 다시 뒤로 보내지 않는다.
+
+    패스했던 문제는 현재 큐의 맨 앞에 남겨 둔다.
+
+    따라서 다음 팀이 바로 이 문제부터 풀 수 있다.
+  */
+
+  $("hint").textContent =
+    "패스했던 문제가 다시 나왔어! 다음 팀 차례야 🎉";
+
+
+  advanceTeam();
+
+}
+
+
+/* =====================================
+   30. 시간 초과 처리
+===================================== */
+
+function finishTurnByTimeout() {
+
+  if (!active) {
+
+    return;
+
+  }
+
+
+  stopTimer();
+
+
+  /*
+    시간 초과 시 현재 보고 있던 문제를
+    맨 마지막 순서로 이동한다.
+
+    예시:
+    현재 순서가 사과 → 바나나 → 포도 → 수박이라면
+    사과에서 시간 초과 시:
+
+    바나나 → 포도 → 수박 → 사과
+
+    다음 팀은 바나나부터 시작한다.
+  */
+
+  if (remaining.length > 0) {
+
+    const unfinishedWord = remaining.shift();
+
+    remaining.push(unfinishedWord);
+
+  }
+
+
+  /*
+    문제를 삭제하지 않고 다음 팀으로 넘어간다.
+  */
+
+  advanceTeam();
+
+}
+
+
+/* =====================================
+   31. 라운드 종료
 ===================================== */
 
 function finishRound() {
 
   stopTimer();
+
+
+  passedThisTurn.clear();
+
 
   /*
     세 번째 라운드가 끝나면 게임 종료.
@@ -1608,22 +1993,24 @@ function finishRound() {
 
   }
 
+
   /*
     다음 라운드로 이동한다.
   */
 
   roundNo++;
 
-  /*
-    다음 라운드는 모든 단어를 다시 섞어서 시작한다.
 
-    이전 라운드에서 패스하거나 시간 초과된 단어도
-    전부 포함한다.
+  /*
+    다음 라운드는 전체 단어를 다시 섞는다.
+
+    모든 단어가 새 라운드에 다시 출제되므로
+    이전 라운드에서 패스하거나 시간 초과됐던
+    문제도 빠지지 않는다.
   */
 
   remaining = shuffle(deck);
 
-  deferredWords.clear();
 
   /*
     새로운 라운드는 첫 번째 팀부터 시작한다.
@@ -1631,8 +2018,13 @@ function finishRound() {
 
   teamNo = 0;
 
+
   updateRound();
+
   updateTeam();
+
+  updateActionButtons();
+
 
   prepareTurn();
 
@@ -1640,7 +2032,7 @@ function finishRound() {
 
 
 /* =====================================
-   29. 게임 결과
+   32. 게임 결과
 ===================================== */
 
 function showResult() {
@@ -1649,9 +2041,16 @@ function showResult() {
 
   stopPreviewTimer();
 
+
   renderScores("finalScores", true);
 
+
+  /*
+    가장 높은 점수 찾기.
+  */
+
   const highestScore = Math.max(...scores);
+
 
   const winners = scores
 
@@ -1664,6 +2063,11 @@ function showResult() {
       item.score === highestScore
     );
 
+
+  /*
+    공동 우승 처리.
+  */
+
   if (winners.length > 1) {
 
     const winnerNames = winners
@@ -1671,6 +2075,7 @@ function showResult() {
       .map(item =>
         getTeamInfo(item.index).name
       );
+
 
     $("winner").textContent =
       "🤝 " +
@@ -1683,12 +2088,14 @@ function showResult() {
 
     const winner = getTeamInfo(winnerIndex);
 
+
     $("winner").textContent =
       winner.emoji + " " +
       winner.name +
-      " 승리! 앙! 🎉 ";
+      " 승리! 앙! 🎉";
 
   }
+
 
   section("result");
 
@@ -1696,31 +2103,35 @@ function showResult() {
 
 
 /* =====================================
-   30. 버튼 연결
+   33. 버튼 연결
 ===================================== */
 
 $("start").onclick = startGame;
 
+
 $("previewAction").onclick =
   handlePreviewAction;
+
 
 $("beginTurn").onclick =
   beginTurn;
 
+
 $("correct").onclick =
   correctAnswer;
+
 
 $("pass").onclick =
   passWord;
 
+
 /*
-  직접 턴 종료 버튼을 눌러도
-  현재 단어를 맨 뒤로 이동한다.
+  턴 종료하기 버튼은 제거했어.
+
+  시간 초과 또는 패스한 문제가 다시 나오는 경우
+  게임이 자동으로 다음 팀에게 넘어간다.
 */
 
-$("end").onclick = () => {
-  finishTurn(true);
-};
 
 /*
   다시 플레이하면 설정 화면으로 돌아간다.
@@ -1732,11 +2143,13 @@ $("again").onclick = () => {
 
   stopPreviewTimer();
 
+
   deck = [];
 
   remaining = [];
 
-  deferredWords.clear();
+  passedThisTurn.clear();
+
 
   previewGroups = [];
 
@@ -1744,9 +2157,11 @@ $("again").onclick = () => {
 
   previewShowingWords = false;
 
+
   roundNo = 0;
 
   teamNo = 0;
+
 
   section("setup");
 
@@ -1754,7 +2169,7 @@ $("again").onclick = () => {
 
 
 /* =====================================
-   31. 단어 목록 불러오기
+   34. 단어 목록 불러오기
 ===================================== */
 
 loadBank();
