@@ -185,9 +185,7 @@ button:disabled {
   margin-top: 12px;
 }
 
-/*
-  정답과 패스 버튼
-*/
+/* 정답과 패스 버튼 */
 
 .actions {
   display: grid;
@@ -196,9 +194,7 @@ button:disabled {
   margin-top: 15px;
 }
 
-/*
-  1라운드는 정답 버튼만 표시
-*/
+/* 1라운드는 정답 버튼만 표시 */
 
 .actions.single {
   grid-template-columns: 1fr;
@@ -545,13 +541,7 @@ button:disabled {
   </div>
 
 
-  <!--
-    시작 버튼을 문제 카드 위로 이동했어.
-
-    정답 버튼과 시작 버튼의 위치가 달라서
-    시간 초과 후 실수로 다음 팀의 시작 버튼을
-    누르는 일을 줄일 수 있어.
-  -->
+  <!-- 시작 버튼은 문제 카드 위에 배치 -->
 
   <button class="primary" id="beginTurn">
     🚀 시작하기
@@ -580,7 +570,7 @@ button:disabled {
   </div>
 
 
-  <!-- 정답과 패스 버튼은 문제 카드 아래에 배치 -->
+  <!-- 정답과 패스 버튼 -->
 
   <div class="actions hidden" id="actions">
 
@@ -595,7 +585,7 @@ button:disabled {
   </div>
 
 
-  <!-- 팀 개수에 따라 점수판 자동 생성 -->
+  <!-- 팀별 점수판 -->
 
   <div class="scores" id="scores"></div>
 
@@ -662,23 +652,11 @@ let allWords = [];
 
 let deck = [];
 
-/*
-  remaining은 아직 정답 처리되지 않은
-  모든 단어의 출제 순서를 관리한다.
-
-  정답: 배열에서 제거
-  패스: 배열 맨 뒤로 이동
-  시간 초과: 현재 단어를 맨 뒤로 이동
-*/
-
 let remaining = [];
 
 
 /*
   현재 팀이 패스한 단어를 기록한다.
-
-  이 단어가 다시 현재 순서로 돌아오면
-  자동으로 다음 팀에게 차례를 넘긴다.
 */
 
 let passedThisTurn = new Set();
@@ -765,7 +743,7 @@ function loadBank() {
 
 
   /*
-    문자열만 사용하고 공백과 중복을 정리한다.
+    문자열만 사용하고 중복을 정리한다.
   */
 
   allWords = [
@@ -942,8 +920,6 @@ function updateActionButtons() {
 
   /*
     1라운드에는 패스할 수 없다.
-    따라서 패스 버튼을 숨기고
-    정답 버튼을 전체 너비로 표시한다.
   */
 
   if (roundNo === 0) {
@@ -1153,7 +1129,7 @@ function startGame() {
 
 
   /*
-    미리보기용 단어 목록을 준비한다.
+    미리보기용 단어 목록 준비
   */
 
   remaining = [...deck];
@@ -1194,7 +1170,7 @@ function startGame() {
 
 
   /*
-    플레이어별 미리보기부터 시작한다.
+    플레이어별 미리보기 시작
   */
 
   startPreview();
@@ -1295,7 +1271,7 @@ function showPreviewCover() {
 
 
   /*
-    이전 플레이어의 단어를 완전히 제거한다.
+    이전 플레이어의 단어 제거
   */
 
   $("previewWords").replaceChildren();
@@ -1352,7 +1328,7 @@ function showPlayerWords() {
 
 
   /*
-    해당 플레이어에게 배정된 단어만 보여준다.
+    해당 플레이어에게 배정된 단어만 표시
   */
 
   words.forEach((word, index) => {
@@ -1384,7 +1360,7 @@ function showPlayerWords() {
 
 
   /*
-    플레이어마다 20초 동안 확인할 수 있다.
+    플레이어마다 20초 동안 확인
   */
 
   previewInterval = setInterval(() => {
@@ -1422,7 +1398,7 @@ function finishPlayerPreview() {
 
 
   /*
-    마지막 플레이어라면 게임을 시작한다.
+    마지막 플레이어라면 게임 시작
   */
 
   if (
@@ -1437,7 +1413,7 @@ function finishPlayerPreview() {
 
 
   /*
-    다음 플레이어로 이동한다.
+    다음 플레이어로 이동
   */
 
   previewPlayerIndex++;
@@ -1490,7 +1466,12 @@ function enterGame() {
   section("game");
 
 
+  /*
+    첫 라운드는 A팀부터 시작한다.
+  */
+
   teamNo = 0;
+
 
   updateTeam();
 
@@ -1559,7 +1540,7 @@ function prepareTurn() {
 
 
   /*
-    시작하기 버튼은 문제 카드 위에 표시한다.
+    시작하기 버튼은 문제 카드 위에 표시
   */
 
   $("beginTurn").textContent =
@@ -1569,7 +1550,7 @@ function prepareTurn() {
 
 
   /*
-    정답/패스 버튼은 숨긴다.
+    정답/패스 버튼 숨기기
   */
 
   $("actions").classList.add("hidden");
@@ -1584,7 +1565,7 @@ function prepareTurn() {
 function prepareNextWord() {
 
   /*
-    모든 단어가 정답 처리됐다면 라운드 종료.
+    모든 단어가 정답 처리됐다면 라운드 종료
   */
 
   if (remaining.length === 0) {
@@ -1599,14 +1580,6 @@ function prepareNextWord() {
   /*
     현재 팀이 패스했던 문제가 다시 돌아왔다면
     해당 문제를 소비하지 않고 다음 팀에게 넘긴다.
-
-    예시:
-    A팀이 사과를 패스한다.
-    사과는 맨 뒤로 이동한다.
-    A팀이 나머지 문제를 모두 맞힌다.
-    사과가 다시 맨 앞에 오면 자동으로 B팀 차례가 된다.
-
-    따라서 B팀은 사과부터 이어서 풀 수 있다.
   */
 
   const nextWord = remaining[0];
@@ -1697,8 +1670,8 @@ function beginTurn() {
 
 
   /*
-    시작 버튼은 숨기고,
-    문제 카드 아래에 정답/패스 버튼을 표시한다.
+    시작 버튼은 숨기고
+    정답/패스 버튼을 표시한다.
   */
 
   $("beginTurn").classList.add("hidden");
@@ -1715,7 +1688,6 @@ function beginTurn() {
 
 
   /*
-    현재 단어가 패스 기록과 겹쳐
     자동으로 턴이 종료됐다면 타이머를 시작하지 않는다.
   */
 
@@ -1727,8 +1699,7 @@ function beginTurn() {
 
 
   /*
-    시작 버튼을 누른 순간부터
-    40초 카운트다운을 시작한다.
+    40초 카운트다운
   */
 
   interval = setInterval(() => {
@@ -1768,14 +1739,14 @@ function correctAnswer() {
 
 
   /*
-    현재 단어를 정답 처리하고 제거한다.
+    현재 단어를 정답 처리하고 제거
   */
 
   remaining.shift();
 
 
   /*
-    현재 팀에 1점을 추가한다.
+    현재 팀에 1점 추가
   */
 
   scores[teamNo]++;
@@ -1785,9 +1756,9 @@ function correctAnswer() {
 
 
   /*
-    다음 단어를 표시한다.
+    다음 단어 표시
 
-    다음 단어가 현재 팀이 패스한 단어라면
+    다음 단어가 현재 팀이 패스했던 단어라면
     자동으로 다음 팀으로 넘어간다.
   */
 
@@ -1839,16 +1810,13 @@ function passWord() {
 
   /*
     현재 팀이 패스한 문제를 기록한다.
-
-    이 문제가 다시 맨 앞으로 돌아오면
-    자동으로 다음 팀의 차례가 된다.
   */
 
   passedThisTurn.add(skipped);
 
 
   /*
-    다음 문제를 표시한다.
+    다음 문제 표시
   */
 
   showCurrentWord();
@@ -1878,9 +1846,6 @@ function advanceTeam() {
 
   /*
     다음 팀은 현재 큐의 첫 번째 단어부터 시작한다.
-
-    직전 팀이 보던 문제는 이미 맨 뒤로 이동했으므로
-    다음 팀은 그 다음 문제를 보게 된다.
   */
 
   prepareTurn();
@@ -1905,10 +1870,9 @@ function finishTurnBecausePassedWordReturned() {
 
 
   /*
-    중요:
     현재 문제를 제거하거나 다시 뒤로 보내지 않는다.
 
-    패스했던 문제는 현재 큐의 맨 앞에 남겨 둔다.
+    패스했던 문제는 큐의 맨 앞에 남겨 둔다.
 
     따라서 다음 팀이 바로 이 문제부터 풀 수 있다.
   */
@@ -1941,14 +1905,6 @@ function finishTurnByTimeout() {
   /*
     시간 초과 시 현재 보고 있던 문제를
     맨 마지막 순서로 이동한다.
-
-    예시:
-    현재 순서가 사과 → 바나나 → 포도 → 수박이라면
-    사과에서 시간 초과 시:
-
-    바나나 → 포도 → 수박 → 사과
-
-    다음 팀은 바나나부터 시작한다.
   */
 
   if (remaining.length > 0) {
@@ -1977,12 +1933,11 @@ function finishRound() {
 
   stopTimer();
 
-
   passedThisTurn.clear();
 
 
   /*
-    세 번째 라운드가 끝나면 게임 종료.
+    세 번째 라운드가 끝나면 게임 종료
   */
 
   if (roundNo >= 2) {
@@ -1995,7 +1950,7 @@ function finishRound() {
 
 
   /*
-    다음 라운드로 이동한다.
+    다음 라운드로 이동
   */
 
   roundNo++;
@@ -2004,20 +1959,38 @@ function finishRound() {
   /*
     다음 라운드는 전체 단어를 다시 섞는다.
 
-    모든 단어가 새 라운드에 다시 출제되므로
-    이전 라운드에서 패스하거나 시간 초과됐던
-    문제도 빠지지 않는다.
+    모든 단어가 새 라운드에 다시 출제된다.
   */
 
   remaining = shuffle(deck);
 
 
   /*
-    새로운 라운드는 첫 번째 팀부터 시작한다.
+    ⭐ 핵심 수정 부분 ⭐
+
+    직전 라운드에서 마지막으로 플레이한 팀의
+    다음 팀이 새로운 라운드를 시작한다.
+
+    2팀 기준:
+    A팀이 마지막으로 플레이 → B팀부터 시작
+    B팀이 마지막으로 플레이 → A팀부터 시작
+
+    3팀 기준:
+    A팀 → B팀 → C팀 → A팀 순서
+
+    4팀 기준:
+    A팀 → B팀 → C팀 → D팀 → A팀 순서
+
+    teamNo에는 직전 라운드의 마지막 팀 번호가
+    그대로 남아 있으므로 1을 더해 다음 팀을 선택한다.
   */
 
-  teamNo = 0;
+  teamNo = (teamNo + 1) % teamCount;
 
+
+  /*
+    새로운 라운드의 화면 업데이트
+  */
 
   updateRound();
 
@@ -2025,6 +1998,10 @@ function finishRound() {
 
   updateActionButtons();
 
+
+  /*
+    다음 라운드의 첫 번째 팀 준비
+  */
 
   prepareTurn();
 
@@ -2046,7 +2023,7 @@ function showResult() {
 
 
   /*
-    가장 높은 점수 찾기.
+    가장 높은 점수 찾기
   */
 
   const highestScore = Math.max(...scores);
@@ -2065,7 +2042,7 @@ function showResult() {
 
 
   /*
-    공동 우승 처리.
+    공동 우승 처리
   */
 
   if (winners.length > 1) {
@@ -2126,10 +2103,10 @@ $("pass").onclick =
 
 
 /*
-  턴 종료하기 버튼은 제거했어.
+  턴 종료 버튼은 없다.
 
-  시간 초과 또는 패스한 문제가 다시 나오는 경우
-  게임이 자동으로 다음 팀에게 넘어간다.
+  시간 초과 또는 패스한 문제가 다시 나오면
+  자동으로 다음 팀에게 넘어간다.
 */
 
 
