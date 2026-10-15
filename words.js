@@ -863,3 +863,50 @@ window.TIMESUP_WORDS["추가 단어 5"] = [
   "패트와 매트",
   "전기뱀장어"
 ];
+
+
+
+/* =====================================
+   모든 카테고리의 중복 단어 제거
+===================================== */
+
+(function removeDuplicateWords() {
+
+  const seen = new Set();
+
+  for (const category of Object.keys(window.TIMESUP_WORDS)) {
+
+    const words = window.TIMESUP_WORDS[category];
+
+    if (!Array.isArray(words)) {
+      continue;
+    }
+
+    window.TIMESUP_WORDS[category] = words.filter(word => {
+
+      if (typeof word !== "string") {
+        return false;
+      }
+
+      const cleanedWord = word.trim();
+
+      if (!cleanedWord) {
+        return false;
+      }
+
+      // 대소문자와 앞뒤 공백을 무시하고 중복 검사
+      const key = cleanedWord.toLowerCase();
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+
+      return true;
+
+    });
+
+  }
+
+})();
